@@ -1,0 +1,9 @@
+*.class
+*.log
+*.db
+*.sqlite
+.vscode/
+.idea/
+out/
+target/
+bin/
