@@ -40,12 +40,18 @@ public class DatabaseInitializer {
                 );
                 """;
 
+        String insertDefaultUser = """
+                INSERT OR IGNORE INTO users (id, name, email, password)
+                VALUES (1, 'Default User', 'default@trackmint.com', '1234');
+                """;
+
         try (Connection conn = DBConnection.getConnection();
              Statement stmt = conn.createStatement()) {
 
             stmt.execute(createUsersTable);
             stmt.execute(createExpensesTable);
             stmt.execute(createBudgetsTable);
+            stmt.execute(insertDefaultUser);
 
             System.out.println("Database initialized successfully.");
 
