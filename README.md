@@ -76,3 +76,35 @@ TrackMint is a Java-based expense tracker that helps users record daily spending
 
 - Integrated SQLite JDBC driver
 - Added SLF4J dependencies for logging support
+
+### Day 3 – Authentication, Budget, and Analytics
+
+#### 1. User Authentication
+
+- Implemented user registration
+- Implemented login system using email and password
+- Connected login flow to application entry point
+
+#### 2. User-Specific Expense Handling
+
+- Linked each expense to a specific user (user_id)
+- Modified system to show only logged-in user’s expenses
+- Removed dependency on hardcoded user IDs
+
+#### 3. Budget Management
+
+- Added monthly budget system
+- Implemented:
+  - Set budget for a month (YYYY-MM)
+  - Update existing budget
+  - Retrieve budget by user and month
+- Ensured one budget per user per month
+
+#### 4. Analytics Module
+
+- Implemented spending insights:
+  - Monthly total spending
+  - Category-wise spending summary
+  - Remaining budget calculation
+  - Top spending category
+- Used Java streams and data aggregation logic
