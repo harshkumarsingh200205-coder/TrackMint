@@ -3,7 +3,6 @@ package com.trackmint.ui;
 import com.trackmint.model.Expense;
 import com.trackmint.service.ExpenseService;
 import com.trackmint.util.InputUtil;
-
 import java.util.List;
 
 public class ExpenseMenu {
@@ -16,29 +15,34 @@ public class ExpenseMenu {
     }
 
     public void showMenu() {
-        while (true) {
-            System.out.println("\n===== TrackMint Expense Menu =====");
-            System.out.println("1. Add Expense");
-            System.out.println("2. View All Expenses");
-            System.out.println("3. Update Expense");
-            System.out.println("4. Delete Expense");
-            System.out.println("5. Exit");
+    while (true) {
+        System.out.println("\n===== TrackMint Expense Menu =====");
+        System.out.println("1. Add Expense");
+        System.out.println("2. View All Expenses");
+        System.out.println("3. Update Expense");
+        System.out.println("4. Delete Expense");
+        System.out.println("5. Budget Menu");
+        System.out.println("6. Exit");
 
-            int choice = InputUtil.getInt("Enter your choice: ");
+        int choice = InputUtil.getInt("Enter your choice: ");
 
-            switch (choice) {
-                case 1 -> addExpense();
-                case 2 -> viewAllExpenses();
-                case 3 -> updateExpense();
-                case 4 -> deleteExpense();
-                case 5 -> {
-                    System.out.println("Exiting Expense Menu.");
-                    return;
-                }
-                default -> System.out.println("Invalid choice. Try again.");
+        switch (choice) {
+            case 1 -> addExpense();
+            case 2 -> viewAllExpenses();
+            case 3 -> updateExpense();
+            case 4 -> deleteExpense();
+            case 5 -> {
+                BudgetMenu budgetMenu = new BudgetMenu(userId);
+                budgetMenu.showBudgetMenu();
             }
+            case 6 -> {
+                System.out.println("Exiting Expense Menu.");
+                return;
+            }
+            default -> System.out.println("Invalid choice. Try again.");
         }
     }
+}
 
     private void addExpense() {
         String title = InputUtil.getString("Enter title: ");
