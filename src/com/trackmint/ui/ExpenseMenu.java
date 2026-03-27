@@ -22,7 +22,8 @@ public class ExpenseMenu {
         System.out.println("3. Update Expense");
         System.out.println("4. Delete Expense");
         System.out.println("5. Budget Menu");
-        System.out.println("6. Exit");
+        System.out.println("6. Analytics Menu");
+        System.out.println("7. Exit");
 
         int choice = InputUtil.getInt("Enter your choice: ");
 
@@ -36,6 +37,10 @@ public class ExpenseMenu {
                 budgetMenu.showBudgetMenu();
             }
             case 6 -> {
+                AnalyticsMenu analyticsMenu = new AnalyticsMenu(userId);
+                analyticsMenu.showAnalyticsMenu();
+            }
+            case 7 -> {
                 System.out.println("Exiting Expense Menu.");
                 return;
             }

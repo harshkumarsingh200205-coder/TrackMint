@@ -1,0 +1,92 @@
+package com.trackmint.ui;
+
+import com.trackmint.service.AnalyticsService;
+import com.trackmint.util.InputUtil;
+
+import java.time.YearMonth;
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+
+import com.trackmint.model.Budget;
+import com.trackmint.model.Expense;
+import com.trackmint.service.ExpenseService;
+import com.trackmint.service.BudgetService;
+
+import java.util.Map;
+
+public class AnalyticsMenu {
+    private final AnalyticsService analyticsService = new AnalyticsService();
+    private final int userId;
+
+    public AnalyticsMenu(int userId) {
+        this.userId = userId;
+    }
+
+    public void showAnalyticsMenu() {
+        while (true) {
+            System.out.println("\n===== TrackMint Analytics Menu =====");
+            System.out.println("1. View Monthly Total");
+            System.out.println("2. View Category-wise Summary");
+            System.out.println("3. View Remaining Budget");
+            System.out.println("4. View Top Spending Category");
+            System.out.println("5. Exit Analytics Menu");
+
+            int choice = InputUtil.getInt("Enter your choice: ");
+
+            switch (choice) {
+                case 1 -> viewMonthlyTotal();
+                case 2 -> viewCategoryWiseSummary();
+                case 3 -> viewRemainingBudget();
+                case 4 -> viewTopCategory();
+                case 5 -> {
+                    System.out.println("Exiting Analytics Menu.");
+                    return;
+                }
+                default -> System.out.println("Invalid choice. Try again.");
+            }
+        }
+    }
+
+    private void viewMonthlyTotal() {
+        String month = InputUtil.getString("Enter month (YYYY-MM): ");
+        double total = analyticsService.getMonthlyTotal(userId, month);
+
+        System.out.println("\n===== Monthly Total =====");
+        System.out.println("Month: " + month);
+        System.out.println("Total Spent: " + total);
+    }
+
+    private void viewCategoryWiseSummary() {
+        String month = InputUtil.getString("Enter month (YYYY-MM): ");
+        Map<String, Double> categoryTotals = analyticsService.getCategoryWiseTotal(userId, month);
+
+        System.out.println("\n===== Category-wise Summary =====");
+        if (categoryTotals.isEmpty()) {
+            System.out.println("No expenses found for this month.");
+            return;
+        }
+
+        for (Map.Entry<String, Double> entry : categoryTotals.entrySet()) {
+            System.out.println(entry.getKey() + ": " + entry.getValue());
+        }
+    }
+
+    private void viewRemainingBudget() {
+        String month = InputUtil.getString("Enter month (YYYY-MM): ");
+        double remaining = analyticsService.getRemainingBudget(userId, month);
+
+        System.out.println("\n===== Remaining Budget =====");
+        System.out.println("Month: " + month);
+        System.out.println("Remaining Budget: " + remaining);
+    }
+
+    private void viewTopCategory() {
+        String month = InputUtil.getString("Enter month (YYYY-MM): ");
+        String topCategory = analyticsService.getTopCategory(userId, month);
+
+        System.out.println("\n===== Top Spending Category =====");
+        System.out.println("Month: " + month);
+        System.out.println("Top Category: " + topCategory);
+    }
+}
