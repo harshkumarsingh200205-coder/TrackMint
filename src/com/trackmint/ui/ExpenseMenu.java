@@ -9,6 +9,11 @@ import java.util.List;
 public class ExpenseMenu {
 
     private final ExpenseService expenseService = new ExpenseService();
+    private final int userId;
+
+    public ExpenseMenu(int userId) {
+        this.userId = userId;
+    }
 
     public void showMenu() {
         while (true) {
@@ -43,11 +48,11 @@ public class ExpenseMenu {
         String expenseDate = InputUtil.getString("Enter expense date (YYYY-MM-DD): ");
         String notes = InputUtil.getString("Enter notes: ");
 
-        expenseService.addExpense(1, title, amount, category, paymentMode, expenseDate, notes);
+        expenseService.addExpense(userId, title, amount, category, paymentMode, expenseDate, notes);
     }
 
     private void viewAllExpenses() {
-        List<Expense> expenses = expenseService.getAllExpenses();
+        List<Expense> expenses = expenseService.getAllExpensesByUser(userId);
 
         if (expenses.isEmpty()) {
             System.out.println("No expenses found.");
@@ -57,7 +62,6 @@ public class ExpenseMenu {
         System.out.println("\n===== All Expenses =====");
         for (Expense expense : expenses) {
             System.out.println("ID: " + expense.getId());
-            System.out.println("User ID: " + expense.getUserId());
             System.out.println("Title: " + expense.getTitle());
             System.out.println("Amount: " + expense.getAmount());
             System.out.println("Category: " + expense.getCategory());

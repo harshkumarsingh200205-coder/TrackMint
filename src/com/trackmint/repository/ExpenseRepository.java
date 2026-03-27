@@ -4,7 +4,6 @@ import com.trackmint.db.DBConnection;
 import com.trackmint.model.Category;
 import com.trackmint.model.Expense;
 import com.trackmint.model.PaymentMode;
-
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -62,6 +61,36 @@ public class ExpenseRepository {
 
         return expenses;
     }
+    public List<Expense> getAllExpensesByUser(int userId) {
+    List<Expense> expenses = new ArrayList<>();
+    String sql = "SELECT * FROM expenses WHERE user_id = ?";
+
+    try (Connection conn = DBConnection.getConnection();
+         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+        pstmt.setInt(1, userId);
+        ResultSet rs = pstmt.executeQuery();
+
+        while (rs.next()) {
+            Expense expense = new Expense(
+                    rs.getInt("id"),
+                    rs.getInt("user_id"),
+                    rs.getString("title"),
+                    rs.getDouble("amount"),
+                    Category.valueOf(rs.getString("category")),
+                    PaymentMode.valueOf(rs.getString("payment_mode")),
+                    LocalDate.parse(rs.getString("expense_date")),
+                    rs.getString("notes")
+            );
+            expenses.add(expense);
+        }
+
+    } catch (SQLException e) {
+        System.out.println("Error fetching user expenses: " + e.getMessage());
+    }
+
+    return expenses;
+}
 
     public void updateExpense(Expense expense) {
         String sql = "UPDATE expenses SET title = ?, amount = ?, category = ?, payment_mode = ?, expense_date = ?, notes = ? WHERE id = ?";

@@ -1,6 +1,8 @@
 package com.trackmint.app;
 
 import com.trackmint.db.DatabaseInitializer;
+import com.trackmint.model.User;
+import com.trackmint.ui.AuthMenu;
 import com.trackmint.ui.ExpenseMenu;
 
 public class Main {
@@ -8,7 +10,12 @@ public class Main {
         System.out.println("Welcome to TrackMint");
         DatabaseInitializer.initialize();
 
-        ExpenseMenu expenseMenu = new ExpenseMenu();
-        expenseMenu.showMenu();
+        AuthMenu authMenu = new AuthMenu();
+        User loggedInUser = authMenu.showAuthMenu();
+
+        if (loggedInUser != null) {
+            ExpenseMenu expenseMenu = new ExpenseMenu(loggedInUser.getId());
+            expenseMenu.showMenu();
+        }
     }
 }
