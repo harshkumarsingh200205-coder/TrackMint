@@ -97,19 +97,19 @@ public class ExpenseMenu {
 }
 
     private void updateExpense() {
-        int id = InputUtil.getInt("Enter expense ID to update: ");
-        String title = InputUtil.getString("Enter new title: ");
-        double amount = InputUtil.getDouble("Enter new amount: ");
-        String category = InputUtil.getString("Enter new category: ");
-        String paymentMode = InputUtil.getString("Enter new payment mode: ");
-        String expenseDate = InputUtil.getString("Enter new expense date (YYYY-MM-DD): ");
-        String notes = InputUtil.getString("Enter new notes: ");
+    int id = InputUtil.getInt("Enter expense ID to update: ");
+    String title = InputUtil.getString("Enter new title: ");
+    double amount = InputUtil.getDouble("Enter new amount: ");
+    String category = InputUtil.getString("Enter new category: ");
+    String paymentMode = InputUtil.getString("Enter new payment mode: ");
+    String expenseDate = InputUtil.getString("Enter new expense date (YYYY-MM-DD): ");
+    String notes = InputUtil.getString("Enter new notes: ");
 
-        expenseService.updateExpense(id, title, amount, category, paymentMode, expenseDate, notes);
-    }
+    expenseService.updateExpense(id, userId, title, amount, category, paymentMode, expenseDate, notes);
+}
 
     private void deleteExpense() {
-        int id = InputUtil.getInt("Enter expense ID to delete: ");
-        expenseService.deleteExpense(id);
-    }
+    int id = InputUtil.getInt("Enter expense ID to delete: ");
+    expenseService.deleteExpense(id, userId);
+}
 }

@@ -4,6 +4,7 @@ import com.trackmint.db.DBConnection;
 import com.trackmint.model.Category;
 import com.trackmint.model.Expense;
 import com.trackmint.model.PaymentMode;
+
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -61,39 +62,40 @@ public class ExpenseRepository {
 
         return expenses;
     }
+
     public List<Expense> getAllExpensesByUser(int userId) {
-    List<Expense> expenses = new ArrayList<>();
-    String sql = "SELECT * FROM expenses WHERE user_id = ?";
+        List<Expense> expenses = new ArrayList<>();
+        String sql = "SELECT * FROM expenses WHERE user_id = ?";
 
-    try (Connection conn = DBConnection.getConnection();
-         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-        pstmt.setInt(1, userId);
-        ResultSet rs = pstmt.executeQuery();
+            pstmt.setInt(1, userId);
+            ResultSet rs = pstmt.executeQuery();
 
-        while (rs.next()) {
-            Expense expense = new Expense(
-                    rs.getInt("id"),
-                    rs.getInt("user_id"),
-                    rs.getString("title"),
-                    rs.getDouble("amount"),
-                    Category.valueOf(rs.getString("category")),
-                    PaymentMode.valueOf(rs.getString("payment_mode")),
-                    LocalDate.parse(rs.getString("expense_date")),
-                    rs.getString("notes")
-            );
-            expenses.add(expense);
+            while (rs.next()) {
+                Expense expense = new Expense(
+                        rs.getInt("id"),
+                        rs.getInt("user_id"),
+                        rs.getString("title"),
+                        rs.getDouble("amount"),
+                        Category.valueOf(rs.getString("category")),
+                        PaymentMode.valueOf(rs.getString("payment_mode")),
+                        LocalDate.parse(rs.getString("expense_date")),
+                        rs.getString("notes")
+                );
+                expenses.add(expense);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error fetching user expenses: " + e.getMessage());
         }
 
-    } catch (SQLException e) {
-        System.out.println("Error fetching user expenses: " + e.getMessage());
+        return expenses;
     }
 
-    return expenses;
-}
-
     public void updateExpense(Expense expense) {
-        String sql = "UPDATE expenses SET title = ?, amount = ?, category = ?, payment_mode = ?, expense_date = ?, notes = ? WHERE id = ?";
+        String sql = "UPDATE expenses SET title = ?, amount = ?, category = ?, payment_mode = ?, expense_date = ?, notes = ? WHERE id = ? AND user_id = ?";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -105,12 +107,14 @@ public class ExpenseRepository {
             pstmt.setString(5, expense.getExpenseDate().toString());
             pstmt.setString(6, expense.getNotes());
             pstmt.setInt(7, expense.getId());
+            pstmt.setInt(8, expense.getUserId());
 
             int rows = pstmt.executeUpdate();
+
             if (rows > 0) {
                 System.out.println("Expense updated successfully.");
             } else {
-                System.out.println("Expense ID not found.");
+                System.out.println("Expense not found or does not belong to this user.");
             }
 
         } catch (SQLException e) {
@@ -118,19 +122,21 @@ public class ExpenseRepository {
         }
     }
 
-    public void deleteExpense(int id) {
-        String sql = "DELETE FROM expenses WHERE id = ?";
+    public void deleteExpense(int id, int userId) {
+        String sql = "DELETE FROM expenses WHERE id = ? AND user_id = ?";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, id);
+            pstmt.setInt(2, userId);
+
             int rows = pstmt.executeUpdate();
 
             if (rows > 0) {
                 System.out.println("Expense deleted successfully.");
             } else {
-                System.out.println("Expense ID not found.");
+                System.out.println("Expense not found or does not belong to this user.");
             }
 
         } catch (SQLException e) {

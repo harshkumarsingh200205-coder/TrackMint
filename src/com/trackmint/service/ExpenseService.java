@@ -4,6 +4,7 @@ import com.trackmint.model.Category;
 import com.trackmint.model.Expense;
 import com.trackmint.model.PaymentMode;
 import com.trackmint.repository.ExpenseRepository;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -30,14 +31,14 @@ public class ExpenseService {
     }
 
     public List<Expense> getAllExpensesByUser(int userId) {
-    return expenseRepository.getAllExpensesByUser(userId);
+        return expenseRepository.getAllExpensesByUser(userId);
     }
 
-    public void updateExpense(int id, String title, double amount, String category,
+    public void updateExpense(int id, int userId, String title, double amount, String category,
                               String paymentMode, String expenseDate, String notes) {
         Expense expense = new Expense(
                 id,
-                1,
+                userId,
                 title,
                 amount,
                 Category.valueOf(category.toUpperCase()),
@@ -48,7 +49,7 @@ public class ExpenseService {
         expenseRepository.updateExpense(expense);
     }
 
-    public void deleteExpense(int id) {
-        expenseRepository.deleteExpense(id);
+    public void deleteExpense(int id, int userId) {
+        expenseRepository.deleteExpense(id, userId);
     }
 }

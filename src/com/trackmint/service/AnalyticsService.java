@@ -39,7 +39,7 @@ public class AnalyticsService {
         Budget budget = budgetService.getBudgetByUserAndMonth(userId, month);
 
         if (budget == null) {
-            return 0;
+            return -1;
         }
 
         return budget.getTotalBudget() - getMonthlyTotal(userId, month);
@@ -48,8 +48,12 @@ public class AnalyticsService {
     public String getTopCategory(int userId, String month) {
         Map<String, Double> categoryTotals = getCategoryWiseTotal(userId, month);
 
-        String topCategory = "None";
-        double max = 0;
+        if (categoryTotals.isEmpty()) {
+            return "No expenses found";
+        }
+
+        String topCategory = null;
+        double max = Double.MIN_VALUE;
 
         for (Map.Entry<String, Double> entry : categoryTotals.entrySet()) {
             if (entry.getValue() > max) {

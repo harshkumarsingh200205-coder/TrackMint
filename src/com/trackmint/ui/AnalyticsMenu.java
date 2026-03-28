@@ -40,62 +40,68 @@ public class AnalyticsMenu {
     }
 
     private String getValidMonth() {
-    String month;
-    do {
-        month = InputUtil.getString("Enter month (YYYY-MM): ");
-        if (!ValidationUtil.isValidMonth(month)) {
-            System.out.println("Invalid month format. Use YYYY-MM.");
-        }
-    } while (!ValidationUtil.isValidMonth(month));
+        String month;
+        do {
+            month = InputUtil.getString("Enter month (YYYY-MM): ");
+            if (!ValidationUtil.isValidMonth(month)) {
+                System.out.println("Invalid month format. Use YYYY-MM.");
+            }
+        } while (!ValidationUtil.isValidMonth(month));
 
-    return month;
-}
+        return month;
+    }
 
     private void viewMonthlyTotal() {
-    String month = getValidMonth();
-    double total = analyticsService.getMonthlyTotal(userId, month);
+        String month = getValidMonth();
+        double total = analyticsService.getMonthlyTotal(userId, month);
 
-    FormatUtil.printSection("Monthly Total");
-    System.out.println("Month       : " + month);
-    System.out.println("Total Spent : " + FormatUtil.formatCurrency(total));
-    FormatUtil.printLine();
-}
+        FormatUtil.printSection("Monthly Total");
+        System.out.println("Month       : " + month);
+        System.out.println("Total Spent : " + FormatUtil.formatCurrency(total));
+        FormatUtil.printLine();
+    }
 
     private void viewCategoryWiseSummary() {
-    String month = getValidMonth();
-    Map<String, Double> categoryTotals = analyticsService.getCategoryWiseTotal(userId, month);
+        String month = getValidMonth();
+        Map<String, Double> categoryTotals = analyticsService.getCategoryWiseTotal(userId, month);
 
-    FormatUtil.printSection("Category-wise Summary");
+        FormatUtil.printSection("Category-wise Summary");
 
-    if (categoryTotals.isEmpty()) {
-        System.out.println("No expenses found for this month.");
-        return;
+        if (categoryTotals.isEmpty()) {
+            System.out.println("No expenses found for this month.");
+            return;
+        }
+
+        for (Map.Entry<String, Double> entry : categoryTotals.entrySet()) {
+            System.out.println(entry.getKey() + " : " + FormatUtil.formatCurrency(entry.getValue()));
+        }
+
+        FormatUtil.printLine();
     }
-
-    for (Map.Entry<String, Double> entry : categoryTotals.entrySet()) {
-        System.out.println(entry.getKey() + " : " + FormatUtil.formatCurrency(entry.getValue()));
-    }
-
-    FormatUtil.printLine();
-}
 
     private void viewRemainingBudget() {
-    String month = getValidMonth();
-    double remaining = analyticsService.getRemainingBudget(userId, month);
+        String month = getValidMonth();
+        double remaining = analyticsService.getRemainingBudget(userId, month);
 
-    FormatUtil.printSection("Remaining Budget");
-    System.out.println("Month            : " + month);
-    System.out.println("Remaining Budget : " + FormatUtil.formatCurrency(remaining));
-    FormatUtil.printLine();
-}
+        FormatUtil.printSection("Remaining Budget");
+        System.out.println("Month : " + month);
+
+        if (remaining == -1) {
+            System.out.println("No budget set for this month.");
+        } else {
+            System.out.println("Remaining Budget : " + FormatUtil.formatCurrency(remaining));
+        }
+
+        FormatUtil.printLine();
+    }
 
     private void viewTopCategory() {
-    String month = getValidMonth();
-    String topCategory = analyticsService.getTopCategory(userId, month);
+        String month = getValidMonth();
+        String topCategory = analyticsService.getTopCategory(userId, month);
 
-    FormatUtil.printSection("Top Spending Category");
-    System.out.println("Month        : " + month);
-    System.out.println("Top Category : " + topCategory);
-    FormatUtil.printLine();
-}
+        FormatUtil.printSection("Top Spending Category");
+        System.out.println("Month        : " + month);
+        System.out.println("Top Category : " + topCategory);
+        FormatUtil.printLine();
+    }
 }
