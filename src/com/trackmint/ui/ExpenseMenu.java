@@ -3,6 +3,7 @@ package com.trackmint.ui;
 import com.trackmint.model.Expense;
 import com.trackmint.service.ExpenseService;
 import com.trackmint.util.InputUtil;
+import com.trackmint.util.ValidationUtil;
 import java.util.List;
 
 public class ExpenseMenu {
@@ -40,15 +41,37 @@ public class ExpenseMenu {
 }
 
     private void addExpense() {
-        String title = InputUtil.getString("Enter title: ");
-        double amount = InputUtil.getDouble("Enter amount: ");
-        String category = InputUtil.getString("Enter category (FOOD, TRAVEL, SHOPPING, BILLS, HEALTH, EDUCATION, ENTERTAINMENT, OTHERS): ");
-        String paymentMode = InputUtil.getString("Enter payment mode (CASH, UPI, DEBIT_CARD, CREDIT_CARD, NET_BANKING): ");
-        String expenseDate = InputUtil.getString("Enter expense date (YYYY-MM-DD): ");
-        String notes = InputUtil.getString("Enter notes: ");
+    String title;
+    do {
+        title = InputUtil.getString("Enter title: ");
+        if (!ValidationUtil.isValidTitle(title)) {
+            System.out.println("Title cannot be empty.");
+        }
+    } while (!ValidationUtil.isValidTitle(title));
 
-        expenseService.addExpense(userId, title, amount, category, paymentMode, expenseDate, notes);
-    }
+    double amount;
+    do {
+        amount = InputUtil.getDouble("Enter amount: ");
+        if (!ValidationUtil.isValidAmount(amount)) {
+            System.out.println("Amount must be greater than 0.");
+        }
+    } while (!ValidationUtil.isValidAmount(amount));
+
+    String category = InputUtil.getString("Enter category (FOOD, TRAVEL, SHOPPING, BILLS, HEALTH, EDUCATION, ENTERTAINMENT, OTHERS): ");
+    String paymentMode = InputUtil.getString("Enter payment mode (CASH, UPI, DEBIT_CARD, CREDIT_CARD, NET_BANKING): ");
+
+    String expenseDate;
+    do {
+        expenseDate = InputUtil.getString("Enter expense date (YYYY-MM-DD): ");
+        if (!ValidationUtil.isValidDate(expenseDate)) {
+            System.out.println("Invalid date format. Use YYYY-MM-DD.");
+        }
+    } while (!ValidationUtil.isValidDate(expenseDate));
+
+    String notes = InputUtil.getString("Enter notes: ");
+
+    expenseService.addExpense(userId, title, amount, category, paymentMode, expenseDate, notes);
+}
 
     private void viewAllExpenses() {
         List<Expense> expenses = expenseService.getAllExpensesByUser(userId);

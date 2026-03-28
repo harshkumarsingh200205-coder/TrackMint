@@ -3,6 +3,8 @@ package com.trackmint.ui;
 import com.trackmint.model.Budget;
 import com.trackmint.service.BudgetService;
 import com.trackmint.util.InputUtil;
+import com.trackmint.util.ValidationUtil;
+
 
 public class BudgetMenu {
     private final BudgetService budgetService = new BudgetService();
@@ -34,22 +36,42 @@ public class BudgetMenu {
     }
 
     private void setBudget() {
-        String month = InputUtil.getString("Enter month (YYYY-MM): ");
-        double totalBudget = InputUtil.getDouble("Enter total budget: ");
+    String month;
+    do {
+        month = InputUtil.getString("Enter month (YYYY-MM): ");
+        if (!ValidationUtil.isValidMonth(month)) {
+            System.out.println("Invalid month format. Use YYYY-MM.");
+        }
+    } while (!ValidationUtil.isValidMonth(month));
 
-        budgetService.setBudget(userId, month, totalBudget);
-    }
+    double totalBudget;
+    do {
+        totalBudget = InputUtil.getDouble("Enter total budget: ");
+        if (!ValidationUtil.isValidAmount(totalBudget)) {
+            System.out.println("Budget must be greater than 0.");
+        }
+    } while (!ValidationUtil.isValidAmount(totalBudget));
+
+    budgetService.setBudget(userId, month, totalBudget);
+}
 
     private void viewBudget() {
-        String month = InputUtil.getString("Enter month (YYYY-MM): ");
-        Budget budget = budgetService.getBudgetByUserAndMonth(userId, month);
-
-        if (budget == null) {
-            System.out.println("No budget found for this month.");
-        } else {
-            System.out.println("\n===== Budget Details =====");
-            System.out.println("Month: " + budget.getMonth());
-            System.out.println("Total Budget: " + budget.getTotalBudget());
+    String month;
+    do {
+        month = InputUtil.getString("Enter month (YYYY-MM): ");
+        if (!ValidationUtil.isValidMonth(month)) {
+            System.out.println("Invalid month format. Use YYYY-MM.");
         }
+    } while (!ValidationUtil.isValidMonth(month));
+
+    Budget budget = budgetService.getBudgetByUserAndMonth(userId, month);
+
+    if (budget == null) {
+        System.out.println("No budget found for this month.");
+    } else {
+        System.out.println("\n===== Budget Details =====");
+        System.out.println("Month: " + budget.getMonth());
+        System.out.println("Total Budget: " + budget.getTotalBudget());
     }
+}
 }
