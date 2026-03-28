@@ -2,6 +2,7 @@ package com.trackmint.ui;
 
 import com.trackmint.model.Budget;
 import com.trackmint.service.BudgetService;
+import com.trackmint.util.FormatUtil;
 import com.trackmint.util.InputUtil;
 import com.trackmint.util.ValidationUtil;
 
@@ -69,9 +70,10 @@ public class BudgetMenu {
     if (budget == null) {
         System.out.println("No budget found for this month.");
     } else {
-        System.out.println("\n===== Budget Details =====");
-        System.out.println("Month: " + budget.getMonth());
-        System.out.println("Total Budget: " + budget.getTotalBudget());
+        FormatUtil.printSection("Budget Details");
+        System.out.println("Month        : " + budget.getMonth());
+        System.out.println("Total Budget : " + FormatUtil.formatCurrency(budget.getTotalBudget()));
+        FormatUtil.printLine();
     }
 }
 }

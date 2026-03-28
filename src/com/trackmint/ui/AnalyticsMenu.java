@@ -1,6 +1,7 @@
 package com.trackmint.ui;
 
 import com.trackmint.service.AnalyticsService;
+import com.trackmint.util.FormatUtil;
 import com.trackmint.util.InputUtil;
 import com.trackmint.util.ValidationUtil;
 import java.util.Map;
@@ -54,41 +55,47 @@ public class AnalyticsMenu {
     String month = getValidMonth();
     double total = analyticsService.getMonthlyTotal(userId, month);
 
-    System.out.println("\n===== Monthly Total =====");
-    System.out.println("Month: " + month);
-    System.out.println("Total Spent: " + total);
+    FormatUtil.printSection("Monthly Total");
+    System.out.println("Month       : " + month);
+    System.out.println("Total Spent : " + FormatUtil.formatCurrency(total));
+    FormatUtil.printLine();
 }
 
     private void viewCategoryWiseSummary() {
     String month = getValidMonth();
     Map<String, Double> categoryTotals = analyticsService.getCategoryWiseTotal(userId, month);
 
-    System.out.println("\n===== Category-wise Summary =====");
+    FormatUtil.printSection("Category-wise Summary");
+
     if (categoryTotals.isEmpty()) {
         System.out.println("No expenses found for this month.");
         return;
     }
 
     for (Map.Entry<String, Double> entry : categoryTotals.entrySet()) {
-        System.out.println(entry.getKey() + ": " + entry.getValue());
+        System.out.println(entry.getKey() + " : " + FormatUtil.formatCurrency(entry.getValue()));
     }
+
+    FormatUtil.printLine();
 }
 
     private void viewRemainingBudget() {
-        String month = getValidMonth();
-        double remaining = analyticsService.getRemainingBudget(userId, month);
+    String month = getValidMonth();
+    double remaining = analyticsService.getRemainingBudget(userId, month);
 
-        System.out.println("\n===== Remaining Budget =====");
-        System.out.println("Month: " + month);
-        System.out.println("Remaining Budget: " + remaining);
-    }
+    FormatUtil.printSection("Remaining Budget");
+    System.out.println("Month            : " + month);
+    System.out.println("Remaining Budget : " + FormatUtil.formatCurrency(remaining));
+    FormatUtil.printLine();
+}
 
     private void viewTopCategory() {
-        String month = getValidMonth();
-        String topCategory = analyticsService.getTopCategory(userId, month);
+    String month = getValidMonth();
+    String topCategory = analyticsService.getTopCategory(userId, month);
 
-        System.out.println("\n===== Top Spending Category =====");
-        System.out.println("Month: " + month);
-        System.out.println("Top Category: " + topCategory);
-    }
+    FormatUtil.printSection("Top Spending Category");
+    System.out.println("Month        : " + month);
+    System.out.println("Top Category : " + topCategory);
+    FormatUtil.printLine();
+}
 }

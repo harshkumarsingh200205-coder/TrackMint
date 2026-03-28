@@ -2,6 +2,7 @@ package com.trackmint.ui;
 
 import com.trackmint.model.Expense;
 import com.trackmint.service.ExpenseService;
+import com.trackmint.util.FormatUtil;
 import com.trackmint.util.InputUtil;
 import com.trackmint.util.ValidationUtil;
 import java.util.List;
@@ -74,25 +75,26 @@ public class ExpenseMenu {
 }
 
     private void viewAllExpenses() {
-        List<Expense> expenses = expenseService.getAllExpensesByUser(userId);
+    List<Expense> expenses = expenseService.getAllExpensesByUser(userId);
 
-        if (expenses.isEmpty()) {
-            System.out.println("No expenses found.");
-            return;
-        }
-
-        System.out.println("\n===== All Expenses =====");
-        for (Expense expense : expenses) {
-            System.out.println("ID: " + expense.getId());
-            System.out.println("Title: " + expense.getTitle());
-            System.out.println("Amount: " + expense.getAmount());
-            System.out.println("Category: " + expense.getCategory());
-            System.out.println("Payment Mode: " + expense.getPaymentMode());
-            System.out.println("Date: " + expense.getExpenseDate());
-            System.out.println("Notes: " + expense.getNotes());
-            System.out.println("------------------------");
-        }
+    if (expenses.isEmpty()) {
+        System.out.println("No expenses found.");
+        return;
     }
+
+    FormatUtil.printSection("All Expenses");
+
+    for (Expense expense : expenses) {
+        System.out.println("ID           : " + expense.getId());
+        System.out.println("Title        : " + expense.getTitle());
+        System.out.println("Amount       : " + FormatUtil.formatCurrency(expense.getAmount()));
+        System.out.println("Category     : " + expense.getCategory());
+        System.out.println("Payment Mode : " + expense.getPaymentMode());
+        System.out.println("Date         : " + expense.getExpenseDate());
+        System.out.println("Notes        : " + expense.getNotes());
+        FormatUtil.printLine();
+    }
+}
 
     private void updateExpense() {
         int id = InputUtil.getInt("Enter expense ID to update: ");
