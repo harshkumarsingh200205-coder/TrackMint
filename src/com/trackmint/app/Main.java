@@ -2,6 +2,7 @@ package com.trackmint.app;
 
 import com.trackmint.db.DatabaseInitializer;
 import com.trackmint.model.User;
+import com.trackmint.service.DashboardService;
 import com.trackmint.ui.AuthMenu;
 import com.trackmint.ui.ExpenseMenu;
 
@@ -14,6 +15,12 @@ public class Main {
         User loggedInUser = authMenu.showAuthMenu();
 
         if (loggedInUser != null) {
+
+            // SHOW DASHBOARD FIRST
+            DashboardService dashboardService = new DashboardService();
+            dashboardService.showDashboard(loggedInUser.getId());
+
+            // THEN OPEN MENU
             ExpenseMenu expenseMenu = new ExpenseMenu(loggedInUser.getId());
             expenseMenu.showMenu();
         }

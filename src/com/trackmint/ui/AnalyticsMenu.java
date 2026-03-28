@@ -2,17 +2,6 @@ package com.trackmint.ui;
 
 import com.trackmint.service.AnalyticsService;
 import com.trackmint.util.InputUtil;
-
-import java.time.YearMonth;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
-
-import com.trackmint.model.Budget;
-import com.trackmint.model.Expense;
-import com.trackmint.service.ExpenseService;
-import com.trackmint.service.BudgetService;
-
 import java.util.Map;
 
 public class AnalyticsMenu {
