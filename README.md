@@ -1,110 +1,129 @@
 # TrackMint
 
-TrackMint is a Java-based expense tracker that helps users record daily spending, store data persistently, and analyze expenses.
-
-## Features
-
-- User registration and login
-- Add, edit, delete expenses
-- Category-wise tracking
-- Budget setting
-- Expense analytics
-- Report export
-
-## Tech Stack
-
-- Java
-- JDBC
-- SQLite
-
-## Project Status
-
-### Day 1 – Project Setup
-
-- Created project structure
-- Implemented core model classes (User, Expense, Budget)
-- Set up SQLite database connection using JDBC
-- Initialized database with required tables
-- Configured GitHub repository and initial commits
+TrackMint is a Java-based expense tracking system that helps users manage expenses, set monthly budgets, and analyze spending behavior through a structured backend system.
 
 ---
 
-### Day 2 – Expense Management Module
+## Overview
 
-#### Features Implemented
+TrackMint is a console-based application built using Java and SQLite. It follows a layered architecture and supports multiple users with persistent data storage and analytics.
 
-**1. Expense CRUD Operations**
+---
 
-- Add new expense
+## Tech Stack
+
+- Java (Core Java, OOP)
+- JDBC
+- SQLite
+- Git & GitHub
+
+---
+
+## Features
+
+### Expense Management
+
+- Add expense
 - View all expenses
-- Update existing expense
+- Update expense
 - Delete expense
 
-**2. Database Integration (SQLite)**
+### User Management
 
-- Connected Java application to SQLite using JDBC
-- Implemented database operations using PreparedStatement
-- Ensured safe and efficient data handling
+- Register new user
+- Login system
+- User-specific data handling
 
-**3. Layered Architecture**
+### Budget Management
 
-- Model Layer → Expense, Category, PaymentMode
-- Repository Layer → ExpenseRepository (database operations)
-- Service Layer → ExpenseService (business logic)
-- UI Layer → ExpenseMenu (user interaction)
+- Set monthly budget
+- Update existing budget
+- View budget for a specific month
 
-**4. Input Handling**
+### Analytics
 
-- Created InputUtil for:
-  - integer input validation
-  - double input validation
-  - string input handling
-- Prevents runtime crashes due to invalid input
+- Monthly total spending
+- Category-wise spending
+- Remaining budget
+- Top spending category
 
-**5. Menu-driven Console Interface**
+### Dashboard
 
-- Interactive CLI for user operations
-- Continuous loop for user actions
-- Clean structured output
+- Monthly summary on login
+- Quick insights:
+  - total spent
+  - remaining budget
+  - top category
 
-**6. Default User Setup**
+---
 
-- Added default user for testing (user_id = 1)
-- Ensures foreign key constraint satisfaction
+## Architecture
 
-**7. External Dependencies**
+TrackMint follows a layered structure:
 
-- Integrated SQLite JDBC driver
-- Added SLF4J dependencies for logging support
+- **UI Layer**
+  - Handles menus and user interaction
 
-### Day 3 – Authentication, Budget, and Analytics
+- **Service Layer**
+  - Contains business logic
 
-#### 1. User Authentication
+- **Repository Layer**
+  - Handles database operations
 
-- Implemented user registration
-- Implemented login system using email and password
-- Connected login flow to application entry point
+- **Database Layer**
+  - SQLite database
 
-#### 2. User-Specific Expense Handling
+---
 
-- Linked each expense to a specific user (user_id)
-- Modified system to show only logged-in user’s expenses
-- Removed dependency on hardcoded user IDs
+## Project Progress
 
-#### 3. Budget Management
+### Day 1 – Setup
 
-- Added monthly budget system
-- Implemented:
-  - Set budget for a month (YYYY-MM)
-  - Update existing budget
-  - Retrieve budget by user and month
-- Ensured one budget per user per month
+- Project structure created
+- Model classes implemented
+- Database connection established
+- Tables created
 
-#### 4. Analytics Module
+---
 
-- Implemented spending insights:
-  - Monthly total spending
-  - Category-wise spending summary
-  - Remaining budget calculation
-  - Top spending category
-- Used Java streams and data aggregation logic
+### Day 2 – Expense Module
+
+- Implemented CRUD operations
+- Integrated SQLite using JDBC
+- Created menu-driven interface
+
+---
+
+### Day 3 – Core Features
+
+- Added user authentication (register/login)
+- Linked expenses to users
+- Implemented budget system
+- Built analytics module:
+  - monthly totals
+  - category summaries
+  - remaining budget
+  - top category
+
+---
+
+### Day 4 – Final Improvements
+
+- Added dashboard after login
+- Introduced main menu navigation
+- Implemented input validation
+- Improved console output formatting
+- Ensured user-specific update/delete operations
+- Cleaned and refactored code structure
+
+---
+
+## How to Run
+
+### Compile
+
+```bash
+javac -cp "lib/*" -d out (Get-ChildItem -Recurse -Filter *.java | ForEach-Object { $_.FullName })
+
+or run .\run.ps1
+```
