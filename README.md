@@ -4,11 +4,34 @@ TrackMint is a Java-based expense tracking system that helps users manage daily 
 
 ---
 
+## Problem Statement
+
+Managing daily expenses is often unstructured and inconsistent. Many users rely on memory or scattered tools, which leads to poor financial awareness and inefficient budgeting.
+
+TrackMint solves this problem by providing a centralized system to record, manage, and analyze expenses.
+
+---
+
+## Why this Project Matters
+
+This project addresses a real-world problem of financial tracking, especially for students and individuals managing limited budgets.
+
+- Provides structured expense management
+- Enables better financial decision-making
+- Demonstrates real-world application of Java concepts
+- Aligns with BYOP requirement of solving a practical problem
+
+---
+
 ## Project Overview
 
-TrackMint is a console-based application built using Java and SQLite. It is designed to solve a practical problem: helping users track where their money goes, plan monthly budgets, and understand their spending behavior through analytics.
+TrackMint is a console-based application built using Java and SQLite. It allows users to:
 
-The application supports multiple users, persistent data storage, budget handling, and spending analysis.
+- Track expenses
+- Manage monthly budgets
+- Analyze spending patterns
+
+The application supports multiple users, persistent storage, and structured analytics.
 
 ---
 
@@ -25,13 +48,13 @@ The application supports multiple users, persistent data storage, budget handlin
 
 - Register new user
 - Login system
-- User-specific expense handling
+- User-specific expense tracking
 
 ### Budget Management
 
 - Set monthly budget
-- Update budget for an existing month
-- View monthly budget
+- Update budget
+- View budget
 
 ### Analytics
 
@@ -42,26 +65,38 @@ The application supports multiple users, persistent data storage, budget handlin
 
 ### Dashboard
 
-- Summary shown after login
-- Current month total spent
+- Summary after login
+- Monthly spending overview
 - Remaining budget
 - Top category
 
 ### Improvements
 
 - Input validation
-- Safer update and delete operations
+- Safe update/delete operations
 - Clean menu navigation
 - Improved console formatting
 
 ---
 
-## Tech Stack
+## Technologies Used
 
-- Java
+- Java (Core Java)
 - JDBC
 - SQLite
 - Git & GitHub
+
+---
+
+## Java Concepts Applied
+
+- Object-Oriented Programming (OOP)
+- Encapsulation and modular design
+- Package structuring (app, model, service, ui, db, util)
+- Exception Handling
+- Collections Framework
+- JDBC (Database Connectivity)
+- Control statements and loops
 
 ---
 
@@ -84,6 +119,76 @@ Handles database communication using JDBC.
 ### Database Layer
 
 Stores users, expenses, and budgets in SQLite.
+
+---
+
+## Project Structure
+
+TrackMint/
+│
+├── src/
+│ └── com/trackmint/
+│ ├── app/ # Main entry point
+│ ├── model/ # Data models
+│ ├── service/ # Business logic
+│ ├── ui/ # User interface
+│ ├── db/ # Database connection
+│ └── util/ # Utility classes
+│
+├── lib/ # JDBC driver
+├── out/ # Compiled files
+└── trackmint.db # Database file
+
+---
+
+---
+
+## Setup Instructions
+
+### Prerequisites
+
+- Java JDK 8 or above
+- SQLite JDBC driver in `lib/` folder
+
+### Steps
+
+1. Clone repository
+   git clone <your-repo-link>
+   cd TrackMint
+
+2. Ensure JDBC driver is present:
+
+lib/sqlite-jdbc-<version>.jar
+
+3. Compile project:
+
+javac -cp "lib/_" -d out (Get-ChildItem -Recurse -Filter _.java | ForEach-Object { $\_.FullName })
+
+---
+
+## How to Run
+
+java -cp "out;lib/\*" com.trackmint.app.Main
+
+For Linux/Mac:
+
+java -cp "out:lib/\*" com.trackmint.app.Main
+
+OR use:
+
+.\run.ps1
+
+---
+
+## Sample Workflow
+
+1. Launch application
+2. Register or login
+3. Add expenses
+4. Set monthly budget
+5. View dashboard
+6. Analyze spending
+7. Update or delete records
 
 ---
 
@@ -126,13 +231,30 @@ Stores users, expenses, and budgets in SQLite.
 
 ---
 
-## How to Run
+## Challenges Faced
 
-### Compile
+- JDBC configuration and driver issues
+- Classpath and compilation errors
+- Designing scalable package structure
+- Handling database initialization
+- Ensuring proper separation of concerns
 
-```powershell
-javac -cp "lib/*" -d out (Get-ChildItem -Recurse -Filter *.java | ForEach-Object { $_.FullName })
+---
 
-or
-run .\run.ps1
-```
+## Future Enhancements
+
+- GUI version (JavaFX or Web App)
+- Advanced analytics with graphs
+- Budget alerts and notifications
+- Export to CSV/Excel
+- Multi-user authentication system
+- Spring Boot backend migration
+
+---
+
+## Author
+
+Harsh Kumar Singh  
+B.Tech AI & ML
+
+---
