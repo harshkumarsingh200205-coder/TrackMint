@@ -1,9 +1,17 @@
+# Java build output
+out/
 *.class
-*.log
+
+# Database files
 *.db
-*.sqlite
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
 .vscode/
 .idea/
-out/
-target/
-bin/
