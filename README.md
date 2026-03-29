@@ -1,21 +1,14 @@
 # TrackMint
 
-TrackMint is a Java-based expense tracking system that helps users manage expenses, set monthly budgets, and analyze spending behavior through a structured backend system.
+TrackMint is a Java-based expense tracking system that helps users manage daily expenses, set monthly budgets, and analyze spending patterns through a structured and layered backend design.
 
 ---
 
-## Overview
+## Project Overview
 
-TrackMint is a console-based application built using Java and SQLite. It follows a layered architecture and supports multiple users with persistent data storage and analytics.
+TrackMint is a console-based application built using Java and SQLite. It is designed to solve a practical problem: helping users track where their money goes, plan monthly budgets, and understand their spending behavior through analytics.
 
----
-
-## Tech Stack
-
-- Java (Core Java, OOP)
-- JDBC
-- SQLite
-- Git & GitHub
+The application supports multiple users, persistent data storage, budget handling, and spending analysis.
 
 ---
 
@@ -32,46 +25,65 @@ TrackMint is a console-based application built using Java and SQLite. It follows
 
 - Register new user
 - Login system
-- User-specific data handling
+- User-specific expense handling
 
 ### Budget Management
 
 - Set monthly budget
-- Update existing budget
-- View budget for a specific month
+- Update budget for an existing month
+- View monthly budget
 
 ### Analytics
 
 - Monthly total spending
-- Category-wise spending
+- Category-wise spending summary
 - Remaining budget
 - Top spending category
 
 ### Dashboard
 
-- Monthly summary on login
-- Quick insights:
-  - total spent
-  - remaining budget
-  - top category
+- Summary shown after login
+- Current month total spent
+- Remaining budget
+- Top category
+
+### Improvements
+
+- Input validation
+- Safer update and delete operations
+- Clean menu navigation
+- Improved console formatting
 
 ---
 
-## Architecture
+## Tech Stack
 
-TrackMint follows a layered structure:
+- Java
+- JDBC
+- SQLite
+- Git & GitHub
 
-- **UI Layer**
-  - Handles menus and user interaction
+---
 
-- **Service Layer**
-  - Contains business logic
+## Project Architecture
 
-- **Repository Layer**
-  - Handles database operations
+TrackMint follows a layered architecture:
 
-- **Database Layer**
-  - SQLite database
+### UI Layer
+
+Handles menus and user interaction.
+
+### Service Layer
+
+Handles business logic such as authentication, budgeting, analytics, and expense operations.
+
+### Repository Layer
+
+Handles database communication using JDBC.
+
+### Database Layer
+
+Stores users, expenses, and budgets in SQLite.
 
 ---
 
@@ -79,42 +91,38 @@ TrackMint follows a layered structure:
 
 ### Day 1 – Setup
 
-- Project structure created
-- Model classes implemented
-- Database connection established
-- Tables created
-
----
+- Created project structure
+- Added model classes
+- Set up SQLite database connection
+- Created database tables
+- Connected GitHub repository
 
 ### Day 2 – Expense Module
 
-- Implemented CRUD operations
-- Integrated SQLite using JDBC
-- Created menu-driven interface
+- Implemented expense CRUD operations
+- Added menu-driven expense handling
+- Integrated SQLite with JDBC
+- Added input utility for safe console input
 
----
+### Day 3 – Authentication, Budget, and Analytics
 
-### Day 3 – Core Features
-
-- Added user authentication (register/login)
-- Linked expenses to users
-- Implemented budget system
-- Built analytics module:
-  - monthly totals
-  - category summaries
+- Added user registration and login
+- Linked expenses to logged-in users
+- Implemented monthly budget system
+- Added analytics:
+  - monthly total spending
+  - category-wise totals
   - remaining budget
   - top category
 
----
-
 ### Day 4 – Final Improvements
 
-- Added dashboard after login
-- Introduced main menu navigation
-- Implemented input validation
-- Improved console output formatting
-- Ensured user-specific update/delete operations
-- Cleaned and refactored code structure
+- Added dashboard summary after login
+- Refactored navigation using a main menu
+- Added strong input validation
+- Improved output formatting
+- Improved project structure and safety of update/delete operations
+- Cleaned repository and documentation
 
 ---
 
@@ -122,8 +130,9 @@ TrackMint follows a layered structure:
 
 ### Compile
 
-```bash
+```powershell
 javac -cp "lib/*" -d out (Get-ChildItem -Recurse -Filter *.java | ForEach-Object { $_.FullName })
 
-or run .\run.ps1
+or
+run .\run.ps1
 ```
