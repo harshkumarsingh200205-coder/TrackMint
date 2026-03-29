@@ -124,6 +124,7 @@ Stores users, expenses, and budgets in SQLite.
 
 ## Project Structure
 
+```
 TrackMint/
 │
 ├── src/
@@ -138,8 +139,7 @@ TrackMint/
 ├── lib/ # JDBC driver
 ├── out/ # Compiled files
 └── trackmint.db # Database file
-
----
+```
 
 ---
 
