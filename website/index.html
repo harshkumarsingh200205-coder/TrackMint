@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="TrackMint helps individuals manage expenses, control budgets, and learn spending patterns with a simple Java-based personal finance tracker."
+    />
+    <title>TrackMint | Smarter Spending Starts Here</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container nav-wrap">
+        <div class="logo">
+          <span class="logo-mark">T</span>
+          <span>TrackMint</span>
+        </div>
+        <nav class="nav">
+          <a href="#features">Features</a>
+          <a href="#how-it-works">How it works</a>
+          <a href="#tech-stack">Stack</a>
+          <a href="#contact">Contact</a>
+        </nav>
+        <a class="button button-primary" href="#cta">Launch app</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow">Personal finance, simplified</p>
+            <h1>Take control of your money with clarity.</h1>
+            <p class="subtext">
+              TrackMint helps you log daily expenses, stay within monthly
+              budgets, and understand where your money is going before it slips
+              away.
+            </p>
+            <div class="cta-row">
+              <a class="button button-primary" href="#features"
+                >Explore features</a
+              >
+              <a class="button button-secondary" href="../README.md"
+                >Read docs</a
+              >
+            </div>
+            <ul class="trust-points">
+              <li>SQLite-powered persistence</li>
+              <li>Multi-user support</li>
+              <li>Budget and category analytics</li>
+            </ul>
+          </div>
+
+          <div class="hero-panel">
+            <div class="panel-card">
+              <div class="panel-top">
+                <span class="status-dot"></span>
+                <span>Monthly overview</span>
+              </div>
+              <div class="metric-row">
+                <div>
+                  <p>Total spent</p>
+                  <h3>$1,240</h3>
+                </div>
+                <div class="trend positive">+12.4%</div>
+              </div>
+              <div class="progress-block">
+                <div class="progress-labels">
+                  <span>Budget left</span>
+                  <span>$760</span>
+                </div>
+                <div class="progress-bar">
+                  <span style="width: 62%"></span>
+                </div>
+              </div>
+              <div class="mini-grid">
+                <div>
+                  <label>Food</label>
+                  <strong>$340</strong>
+                </div>
+                <div>
+                  <label>Travel</label>
+                  <strong>$280</strong>
+                </div>
+                <div>
+                  <label>Bills</label>
+                  <strong>$410</strong>
+                </div>
+                <div>
+                  <label>Shopping</label>
+                  <strong>$210</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="stats">
+        <div class="container stats-grid">
+          <div>
+            <strong>100%</strong>
+            <span>Local-first tracking</span>
+          </div>
+          <div>
+            <strong>8</strong>
+            <span>Expense categories</span>
+          </div>
+          <div>
+            <strong>1</strong>
+            <span>User dashboard</span>
+          </div>
+          <div>
+            <strong>24/7</strong>
+            <span>Personal clarity</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="features" class="section">
+        <div class="container">
+          <div class="section-heading">
+            <p class="eyebrow">Key capabilities</p>
+            <h2>Designed for everyday financial discipline.</h2>
+          </div>
+
+          <div class="card-grid">
+            <article class="feature-card">
+              <div class="icon">✦</div>
+              <h3>Expense tracking</h3>
+              <p>
+                Add, update, and remove expenses with titles, categories,
+                payment modes, notes, and dates for complete visibility.
+              </p>
+            </article>
+
+            <article class="feature-card">
+              <div class="icon">◎</div>
+              <h3>Budget management</h3>
+              <p>
+                Set monthly budgets and compare planned spending against actual
+                costs to stay on target throughout the month.
+              </p>
+            </article>
+
+            <article class="feature-card">
+              <div class="icon">▣</div>
+              <h3>Smart analytics</h3>
+              <p>
+                View monthly totals, category-wise summaries, remaining budget,
+                and top-spending categories without extra tools.
+              </p>
+            </article>
+
+            <article class="feature-card">
+              <div class="icon">▤</div>
+              <h3>Secure user access</h3>
+              <p>
+                Register and log in with per-user data separation, making each
+                profile private and focused on personal spending history.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="how-it-works" class="section section-alt">
+        <div class="container">
+          <div class="section-heading">
+            <p class="eyebrow">How it works</p>
+            <h2>From daily spending to smarter decisions.</h2>
+          </div>
+
+          <div class="steps">
+            <div class="step-item">
+              <span>01</span>
+              <h3>Create your profile</h3>
+              <p>
+                Register with a name and email to keep your financial records
+                organized.
+              </p>
+            </div>
+            <div class="step-item">
+              <span>02</span>
+              <h3>Log expenses</h3>
+              <p>
+                Capture categories, amounts, and payment types in seconds with a
+                simple CLI flow.
+              </p>
+            </div>
+            <div class="step-item">
+              <span>03</span>
+              <h3>Set a monthly budget</h3>
+              <p>
+                Establish spending limits and compare them with actual spending
+                trends.
+              </p>
+            </div>
+            <div class="step-item">
+              <span>04</span>
+              <h3>Review insights</h3>
+              <p>
+                Use dashboard summaries and analytics to identify spending
+                patterns and improve decisions.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="tech-stack" class="section">
+        <div class="container tech-wrap">
+          <div class="section-heading left-align">
+            <p class="eyebrow">Built with</p>
+            <h2>Reliable Java tools for real-world utility.</h2>
+          </div>
+          <div class="tech-list">
+            <span>Java</span>
+            <span>JDBC</span>
+            <span>SQLite</span>
+            <span>OOP Design</span>
+            <span>Console UI</span>
+            <span>GitHub</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="cta" class="cta-section">
+        <div class="container cta-box">
+          <div>
+            <p class="eyebrow">Ready to get started?</p>
+            <h2>Build stronger financial habits with TrackMint.</h2>
+          </div>
+          <a class="button button-primary" href="../README.md"
+            >View project guide</a
+          >
+        </div>
+      </section>
+    </main>
+
+    <footer id="contact" class="site-footer">
+      <div class="container footer-wrap">
+        <p>© <span id="year"></span> TrackMint</p>
+        <p>Expense tracking for people who want clarity and control.</p>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
