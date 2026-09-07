@@ -83,6 +83,14 @@ public class ExpenseService {
         return expenseRepository.deleteExpense(id, userId);
     }
 
+    public List<Expense> getExpensesByDateRange(int userId, String startDate, String endDate) {
+        return expenseRepository.getExpensesByDateRange(userId, startDate, endDate);
+    }
+
+    public List<Expense> getExpensesByCategory(int userId, Category category) {
+        return expenseRepository.getExpensesByCategory(userId, category);
+    }
+
     public double getMonthlyTotal(int userId, String month) {
         return expenseRepository.getMonthlyTotal(userId, month);
     }

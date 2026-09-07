@@ -1,12 +1,17 @@
 package com.trackmint.ui;
 
 import com.trackmint.exception.DatabaseException;
+import com.trackmint.exception.TrackMintException;
+import com.trackmint.model.Budget;
 import com.trackmint.model.Category;
 import com.trackmint.model.Expense;
 import com.trackmint.model.PaymentMode;
+import com.trackmint.service.BudgetService;
 import com.trackmint.service.ExpenseService;
+import com.trackmint.util.CsvExporter;
 import com.trackmint.util.FormatUtil;
 import com.trackmint.util.InputUtil;
+import com.trackmint.util.TableUtil;
 import com.trackmint.util.ValidationUtil;
 
 import java.time.LocalDate;
@@ -15,34 +20,46 @@ import java.util.List;
 public class ExpenseMenu {
 
     private final ExpenseService expenseService;
+    private final BudgetService budgetService;
     private final int userId;
 
     public ExpenseMenu(int userId) {
-        this(userId, new ExpenseService());
+        this(userId, new ExpenseService(), new BudgetService());
     }
 
     public ExpenseMenu(int userId, ExpenseService expenseService) {
+        this(userId, expenseService, new BudgetService());
+    }
+
+    public ExpenseMenu(int userId, ExpenseService expenseService, BudgetService budgetService) {
         this.userId = userId;
         this.expenseService = expenseService;
+        this.budgetService = budgetService;
     }
 
     public void showMenu() {
         while (true) {
             System.out.println("\n===== TrackMint Expense Menu =====");
             System.out.println("1. Add Expense");
-            System.out.println("2. View All Expenses");
-            System.out.println("3. Update Expense");
-            System.out.println("4. Delete Expense");
-            System.out.println("5. Back");
+            System.out.println("2. View All Expenses (Table)");
+            System.out.println("3. Filter Expenses by Date Range");
+            System.out.println("4. Filter Expenses by Category");
+            System.out.println("5. Update Expense");
+            System.out.println("6. Delete Expense");
+            System.out.println("7. Export Expenses to CSV");
+            System.out.println("8. Back to Main Menu");
 
             int choice = InputUtil.getInt("Enter your choice: ");
 
             switch (choice) {
                 case 1 -> addExpense();
                 case 2 -> viewAllExpenses();
-                case 3 -> updateExpense();
-                case 4 -> deleteExpense();
-                case 5 -> {
+                case 3 -> filterByDateRange();
+                case 4 -> filterByCategory();
+                case 5 -> updateExpense();
+                case 6 -> deleteExpense();
+                case 7 -> exportToCsv();
+                case 8 -> {
                     System.out.println("Returning to Main Menu.");
                     return;
                 }
@@ -77,6 +94,7 @@ public class ExpenseMenu {
             boolean success = expenseService.addExpense(userId, title, amount, category, paymentMode, expenseDate, notes);
             if (success) {
                 System.out.println("Expense added successfully.");
+                checkBudgetAlert(expenseDate);
             } else {
                 System.out.println("Failed to add expense.");
             }
@@ -88,26 +106,47 @@ public class ExpenseMenu {
     private void viewAllExpenses() {
         try {
             List<Expense> expenses = expenseService.getAllExpensesByUser(userId);
-
-            if (expenses.isEmpty()) {
-                System.out.println("No expenses found.");
-                return;
-            }
-
-            FormatUtil.printSection("All Expenses");
-
-            for (Expense expense : expenses) {
-                System.out.println("ID           : " + expense.getId());
-                System.out.println("Title        : " + expense.getTitle());
-                System.out.println("Amount       : " + FormatUtil.formatCurrency(expense.getAmount()));
-                System.out.println("Category     : " + expense.getCategory());
-                System.out.println("Payment Mode : " + expense.getPaymentMode());
-                System.out.println("Date         : " + expense.getExpenseDate());
-                System.out.println("Notes        : " + expense.getNotes());
-                FormatUtil.printLine();
-            }
+            FormatUtil.printSection("ALL EXPENSES");
+            TableUtil.printExpenseTable(expenses);
         } catch (DatabaseException e) {
             System.out.println("Error fetching expenses: " + e.getMessage());
+        }
+    }
+
+    private void filterByDateRange() {
+        String startDate;
+        do {
+            startDate = InputUtil.getString("Enter start date (YYYY-MM-DD): ");
+            if (!ValidationUtil.isValidDate(startDate)) {
+                System.out.println("Invalid date format. Use YYYY-MM-DD.");
+            }
+        } while (!ValidationUtil.isValidDate(startDate));
+
+        String endDate;
+        do {
+            endDate = InputUtil.getString("Enter end date (YYYY-MM-DD): ");
+            if (!ValidationUtil.isValidDate(endDate)) {
+                System.out.println("Invalid date format. Use YYYY-MM-DD.");
+            }
+        } while (!ValidationUtil.isValidDate(endDate));
+
+        try {
+            List<Expense> expenses = expenseService.getExpensesByDateRange(userId, startDate, endDate);
+            FormatUtil.printSection("EXPENSES (" + startDate + " to " + endDate + ")");
+            TableUtil.printExpenseTable(expenses);
+        } catch (DatabaseException e) {
+            System.out.println("Error filtering expenses: " + e.getMessage());
+        }
+    }
+
+    private void filterByCategory() {
+        Category category = promptCategory();
+        try {
+            List<Expense> expenses = expenseService.getExpensesByCategory(userId, category);
+            FormatUtil.printSection("EXPENSES FOR CATEGORY: " + category);
+            TableUtil.printExpenseTable(expenses);
+        } catch (DatabaseException e) {
+            System.out.println("Error filtering expenses: " + e.getMessage());
         }
     }
 
@@ -146,6 +185,7 @@ public class ExpenseMenu {
             boolean success = expenseService.updateExpense(id, userId, title, amount, category, paymentMode, expenseDate, notes);
             if (success) {
                 System.out.println("Expense updated successfully.");
+                checkBudgetAlert(expenseDate);
             } else {
                 System.out.println("Failed to update expense.");
             }
@@ -176,6 +216,44 @@ public class ExpenseMenu {
             }
         } catch (DatabaseException e) {
             System.out.println("Error deleting expense: " + e.getMessage());
+        }
+    }
+
+    private void exportToCsv() {
+        try {
+            List<Expense> expenses = expenseService.getAllExpensesByUser(userId);
+            if (expenses.isEmpty()) {
+                System.out.println("No expenses available to export.");
+                return;
+            }
+            String path = CsvExporter.exportExpenses(userId, expenses);
+            System.out.println("Expenses exported successfully (" + expenses.size() + " records).");
+            System.out.println("Saved to: " + path);
+        } catch (TrackMintException e) {
+            System.out.println("Export failed: " + e.getMessage());
+        }
+    }
+
+    private void checkBudgetAlert(LocalDate date) {
+        String month = String.format("%04d-%02d", date.getYear(), date.getMonthValue());
+        try {
+            Budget budget = budgetService.getBudgetByUserAndMonth(userId, month);
+            if (budget != null && budget.getTotalBudget() > 0) {
+                double totalSpent = expenseService.getMonthlyTotal(userId, month);
+                double limit = budget.getTotalBudget();
+                double pct = (totalSpent / limit) * 100.0;
+
+                if (totalSpent > limit) {
+                    double over = totalSpent - limit;
+                    System.out.println("🚨 Alert: You have exceeded your monthly budget of " +
+                            FormatUtil.formatCurrency(limit) + " by " + FormatUtil.formatCurrency(over) +
+                            " (Total Spent: " + FormatUtil.formatCurrency(totalSpent) + ")!");
+                } else if (pct >= 80.0) {
+                    System.out.printf("⚠️  Warning: You have spent %.1f%% of your monthly budget (%s / %s).%n",
+                            pct, FormatUtil.formatCurrency(totalSpent), FormatUtil.formatCurrency(limit));
+                }
+            }
+        } catch (Exception ignored) {
         }
     }
 

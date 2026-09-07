@@ -128,6 +128,73 @@ public class ExpenseRepository {
         return null;
     }
 
+    public List<Expense> getExpensesByDateRange(int userId, String startDate, String endDate) {
+        List<Expense> expenses = new ArrayList<>();
+        String sql = "SELECT * FROM expenses WHERE user_id = ? AND expense_date >= ? AND expense_date <= ? ORDER BY expense_date DESC";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, userId);
+            pstmt.setString(2, startDate);
+            pstmt.setString(3, endDate);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Expense expense = new Expense(
+                            rs.getInt("id"),
+                            rs.getInt("user_id"),
+                            rs.getString("title"),
+                            rs.getDouble("amount"),
+                            Category.valueOf(rs.getString("category")),
+                            PaymentMode.valueOf(rs.getString("payment_mode")),
+                            LocalDate.parse(rs.getString("expense_date")),
+                            rs.getString("notes")
+                    );
+                    expenses.add(expense);
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new DatabaseException("Failed to fetch expenses by date range", e);
+        }
+
+        return expenses;
+    }
+
+    public List<Expense> getExpensesByCategory(int userId, Category category) {
+        List<Expense> expenses = new ArrayList<>();
+        String sql = "SELECT * FROM expenses WHERE user_id = ? AND category = ? ORDER BY expense_date DESC";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, userId);
+            pstmt.setString(2, category.name());
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Expense expense = new Expense(
+                            rs.getInt("id"),
+                            rs.getInt("user_id"),
+                            rs.getString("title"),
+                            rs.getDouble("amount"),
+                            Category.valueOf(rs.getString("category")),
+                            PaymentMode.valueOf(rs.getString("payment_mode")),
+                            LocalDate.parse(rs.getString("expense_date")),
+                            rs.getString("notes")
+                    );
+                    expenses.add(expense);
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new DatabaseException("Failed to fetch expenses by category", e);
+        }
+
+        return expenses;
+    }
+
     public boolean updateExpense(Expense expense) {
         String sql = "UPDATE expenses SET title = ?, amount = ?, category = ?, payment_mode = ?, expense_date = ?, notes = ? WHERE id = ? AND user_id = ?";
 

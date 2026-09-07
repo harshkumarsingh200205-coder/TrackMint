@@ -15,3 +15,6 @@ Thumbs.db
 # IDE files
 .vscode/
 .idea/
+
+# User Exports
+exports/*.csv
