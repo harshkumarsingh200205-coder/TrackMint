@@ -3,6 +3,7 @@ package com.trackmint.db;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class DBConnection {
     private static final String URL = "jdbc:sqlite:trackmint.db";
@@ -14,6 +15,10 @@ public class DBConnection {
             throw new SQLException("SQLite JDBC driver not found.", e);
         }
 
-        return DriverManager.getConnection(URL);
+        Connection conn = DriverManager.getConnection(URL);
+        try (Statement stmt = conn.createStatement()) {
+            stmt.execute("PRAGMA foreign_keys = ON;");
+        }
+        return conn;
     }
 }

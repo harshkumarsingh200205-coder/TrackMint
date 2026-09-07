@@ -73,4 +73,16 @@ public class ExpenseService {
     public void deleteExpense(int id, int userId) {
         expenseRepository.deleteExpense(id, userId);
     }
+
+    public double getMonthlyTotal(int userId, String month) {
+        return expenseRepository.getMonthlyTotal(userId, month);
+    }
+
+    public java.util.Map<String, Double> getCategoryWiseTotal(int userId, String month) {
+        return expenseRepository.getCategoryWiseTotal(userId, month);
+    }
+
+    public String getTopCategory(int userId, String month) {
+        return expenseRepository.getTopCategory(userId, month);
+    }
 }

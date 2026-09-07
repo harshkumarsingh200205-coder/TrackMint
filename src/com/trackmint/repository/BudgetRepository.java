@@ -11,34 +11,20 @@ import java.sql.SQLException;
 public class BudgetRepository {
 
     public void setBudget(Budget budget) {
-        String checkSql = "SELECT * FROM budgets WHERE user_id = ? AND month = ?";
-        String insertSql = "INSERT INTO budgets (user_id, month, total_budget) VALUES (?, ?, ?)";
-        String updateSql = "UPDATE budgets SET total_budget = ? WHERE user_id = ? AND month = ?";
+        String upsertSql = """
+                INSERT INTO budgets (user_id, month, total_budget)
+                VALUES (?, ?, ?)
+                ON CONFLICT(user_id, month) DO UPDATE SET total_budget = excluded.total_budget;
+                """;
 
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
+             PreparedStatement pstmt = conn.prepareStatement(upsertSql)) {
 
-            checkStmt.setInt(1, budget.getUserId());
-            checkStmt.setString(2, budget.getMonth());
+            pstmt.setInt(1, budget.getUserId());
+            pstmt.setString(2, budget.getMonth());
+            pstmt.setDouble(3, budget.getTotalBudget());
 
-            try (ResultSet rs = checkStmt.executeQuery()) {
-                if (rs.next()) {
-                    try (PreparedStatement updateStmt = conn.prepareStatement(updateSql)) {
-                        updateStmt.setDouble(1, budget.getTotalBudget());
-                        updateStmt.setInt(2, budget.getUserId());
-                        updateStmt.setString(3, budget.getMonth());
-                        updateStmt.executeUpdate();
-                    }
-                } else {
-                    try (PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
-                        insertStmt.setInt(1, budget.getUserId());
-                        insertStmt.setString(2, budget.getMonth());
-                        insertStmt.setDouble(3, budget.getTotalBudget());
-                        insertStmt.executeUpdate();
-                    }
-                }
-            }
-
+            pstmt.executeUpdate();
             System.out.println("Budget saved successfully.");
 
         } catch (SQLException e) {

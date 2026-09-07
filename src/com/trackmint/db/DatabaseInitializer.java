@@ -1,6 +1,9 @@
 package com.trackmint.db;
 
+import com.trackmint.util.PasswordUtil;
+
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -36,22 +39,38 @@ public class DatabaseInitializer {
                     user_id INTEGER NOT NULL,
                     month TEXT NOT NULL,
                     total_budget REAL NOT NULL,
+                    UNIQUE(user_id, month),
                     FOREIGN KEY (user_id) REFERENCES users(id)
                 );
                 """;
 
+        String createBudgetIndex = """
+                CREATE UNIQUE INDEX IF NOT EXISTS idx_budgets_user_month ON budgets(user_id, month);
+                """;
+
+        String createExpenseIndex = """
+                CREATE INDEX IF NOT EXISTS idx_expenses_user_date ON expenses(user_id, expense_date);
+                """;
+
         String insertDefaultUser = """
                 INSERT OR IGNORE INTO users (id, name, email, password)
-                VALUES (1, 'Default User', 'default@trackmint.com', '1234');
+                VALUES (1, 'Default User', 'default@trackmint.com', ?);
                 """;
 
         try (Connection conn = DBConnection.getConnection();
              Statement stmt = conn.createStatement()) {
 
+            stmt.execute("PRAGMA journal_mode = WAL;");
             stmt.execute(createUsersTable);
             stmt.execute(createExpensesTable);
             stmt.execute(createBudgetsTable);
-            stmt.execute(insertDefaultUser);
+            stmt.execute(createBudgetIndex);
+            stmt.execute(createExpenseIndex);
+
+            try (PreparedStatement pstmt = conn.prepareStatement(insertDefaultUser)) {
+                pstmt.setString(1, PasswordUtil.hashPassword("1234"));
+                pstmt.executeUpdate();
+            }
 
             System.out.println("Database initialized successfully.");
 

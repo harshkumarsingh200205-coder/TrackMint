@@ -175,4 +175,71 @@ public class ExpenseRepository {
             System.out.println("Error deleting expense: " + e.getMessage());
         }
     }
+
+    public double getMonthlyTotal(int userId, String month) {
+        String sql = "SELECT COALESCE(SUM(amount), 0.0) FROM expenses WHERE user_id = ? AND strftime('%Y-%m', expense_date) = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, userId);
+            pstmt.setString(2, month);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getDouble(1);
+                }
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error calculating monthly total: " + e.getMessage());
+        }
+
+        return 0.0;
+    }
+
+    public java.util.Map<String, Double> getCategoryWiseTotal(int userId, String month) {
+        java.util.Map<String, Double> categoryTotals = new java.util.HashMap<>();
+        String sql = "SELECT category, SUM(amount) FROM expenses WHERE user_id = ? AND strftime('%Y-%m', expense_date) = ? GROUP BY category";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, userId);
+            pstmt.setString(2, month);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    categoryTotals.put(rs.getString(1), rs.getDouble(2));
+                }
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error calculating category totals: " + e.getMessage());
+        }
+
+        return categoryTotals;
+    }
+
+    public String getTopCategory(int userId, String month) {
+        String sql = "SELECT category FROM expenses WHERE user_id = ? AND strftime('%Y-%m', expense_date) = ? GROUP BY category ORDER BY SUM(amount) DESC LIMIT 1";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, userId);
+            pstmt.setString(2, month);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString(1);
+                }
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error finding top category: " + e.getMessage());
+        }
+
+        return "No expenses found";
+    }
 }

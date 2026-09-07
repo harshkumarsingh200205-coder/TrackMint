@@ -1,11 +1,7 @@
 package com.trackmint.service;
 
 import com.trackmint.model.Budget;
-import com.trackmint.model.Expense;
 
-import java.time.YearMonth;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.OptionalDouble;
 
@@ -14,26 +10,11 @@ public class AnalyticsService {
     private final BudgetService budgetService = new BudgetService();
 
     public double getMonthlyTotal(int userId, String month) {
-        List<Expense> expenses = expenseService.getAllExpensesByUser(userId);
-
-        return expenses.stream()
-                .filter(expense -> YearMonth.from(expense.getExpenseDate()).toString().equals(month))
-                .mapToDouble(Expense::getAmount)
-                .sum();
+        return expenseService.getMonthlyTotal(userId, month);
     }
 
     public Map<String, Double> getCategoryWiseTotal(int userId, String month) {
-        List<Expense> expenses = expenseService.getAllExpensesByUser(userId);
-        Map<String, Double> categoryTotals = new HashMap<>();
-
-        for (Expense expense : expenses) {
-            if (YearMonth.from(expense.getExpenseDate()).toString().equals(month)) {
-                String category = expense.getCategory().name();
-                categoryTotals.put(category, categoryTotals.getOrDefault(category, 0.0) + expense.getAmount());
-            }
-        }
-
-        return categoryTotals;
+        return expenseService.getCategoryWiseTotal(userId, month);
     }
 
     public OptionalDouble getRemainingBudget(int userId, String month) {
@@ -47,22 +28,6 @@ public class AnalyticsService {
     }
 
     public String getTopCategory(int userId, String month) {
-        Map<String, Double> categoryTotals = getCategoryWiseTotal(userId, month);
-
-        if (categoryTotals.isEmpty()) {
-            return "No expenses found";
-        }
-
-        String topCategory = null;
-        double max = -1.0;
-
-        for (Map.Entry<String, Double> entry : categoryTotals.entrySet()) {
-            if (entry.getValue() > max) {
-                max = entry.getValue();
-                topCategory = entry.getKey();
-            }
-        }
-
-        return topCategory != null ? topCategory : "No expenses found";
+        return expenseService.getTopCategory(userId, month);
     }
 }

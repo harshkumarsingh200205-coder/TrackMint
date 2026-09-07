@@ -32,4 +32,12 @@ public class InputUtil {
         System.out.print(message);
         return scanner.nextLine().trim();
     }
+
+    public static String getPassword(String message) {
+        if (System.console() != null) {
+            char[] passwordChars = System.console().readPassword(message);
+            return passwordChars != null ? new String(passwordChars).trim() : "";
+        }
+        return getString(message);
+    }
 }

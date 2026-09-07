@@ -34,16 +34,36 @@ public class AuthMenu {
     }
 
     private void register() {
-        String name = InputUtil.getString("Enter your name: ");
-        String email = InputUtil.getString("Enter your email: ");
-        String password = InputUtil.getString("Enter your password: ");
+        String name;
+        do {
+            name = InputUtil.getString("Enter your name: ");
+            if (name.isEmpty()) {
+                System.out.println("Name cannot be empty.");
+            }
+        } while (name.isEmpty());
+
+        String email;
+        do {
+            email = InputUtil.getString("Enter your email: ");
+            if (email.isEmpty() || !email.contains("@") || !email.contains(".")) {
+                System.out.println("Please enter a valid email address.");
+            }
+        } while (email.isEmpty() || !email.contains("@") || !email.contains("."));
+
+        String password;
+        do {
+            password = InputUtil.getPassword("Enter your password: ");
+            if (password.length() < 4) {
+                System.out.println("Password must be at least 4 characters long.");
+            }
+        } while (password.length() < 4);
 
         authService.register(name, email, password);
     }
 
     private User login() {
         String email = InputUtil.getString("Enter your email: ");
-        String password = InputUtil.getString("Enter your password: ");
+        String password = InputUtil.getPassword("Enter your password: ");
 
         User user = authService.login(email, password);
 
