@@ -1,0 +1,50 @@
+name: Build & Verify
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    name: Build & Smoke Test
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Compile on Linux / macOS
+        if: runner.os != 'Windows'
+        run: |
+          mkdir -p out
+          find src -name "*.java" > sources.txt
+          javac -cp "lib/*" -d out @sources.txt
+
+      - name: Smoke Test on Linux / macOS
+        if: runner.os != 'Windows'
+        run: |
+          echo "3" | java --enable-native-access=ALL-UNNAMED -cp "out:lib/*" com.trackmint.app.Main
+
+      - name: Compile on Windows
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          if (!(Test-Path out)) { New-Item -ItemType Directory -Path out }
+          javac -cp "lib/*" -d out (Get-ChildItem -Recurse -Filter *.java | ForEach-Object { $_.FullName })
+
+      - name: Smoke Test on Windows
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          "3" | java --enable-native-access=ALL-UNNAMED -cp "out;lib/*" com.trackmint.app.Main
