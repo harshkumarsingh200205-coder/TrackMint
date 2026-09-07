@@ -1,258 +1,728 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="TrackMint helps individuals manage expenses, control budgets, and learn spending patterns with a simple Java-based personal finance tracker."
-    />
-    <title>TrackMint | Smarter Spending Starts Here</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <header class="site-header">
-      <div class="container nav-wrap">
-        <div class="logo">
-          <span class="logo-mark">T</span>
-          <span>TrackMint</span>
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="TrackMint - Modern Financial Analytics, Budgeting, and Expense Management Dashboard." />
+  <title>TrackMint | Smart Financial Dashboard</title>
+  
+  <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-layout">
+    
+    <!-- Left Floating Dock / Sidebar -->
+    <aside class="dock-sidebar" aria-label="Main Navigation">
+      <!-- Theme Toggle Pill -->
+      <div class="theme-toggle-container" id="themeToggleBtn" title="Toggle Light / Dark Mode">
+        <button class="theme-icon light active" id="lightModeBtn" aria-label="Light Mode">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        </button>
+        <button class="theme-icon dark" id="darkModeBtn" aria-label="Dark Mode">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Navigation Icons Pill -->
+      <nav class="dock-nav-group">
+        <button class="dock-btn active" data-tab="overview" title="Overview">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7" rx="2"></rect>
+            <rect x="14" y="3" width="7" height="7" rx="2"></rect>
+            <rect x="14" y="14" width="7" height="7" rx="2"></rect>
+            <rect x="3" y="14" width="7" height="7" rx="2"></rect>
+          </svg>
+        </button>
+        <button class="dock-btn" data-tab="activity" title="Activity Calendar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="3" ry="3"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+        </button>
+        <button class="dock-btn" data-tab="messages" title="Messages">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+            <polyline points="22,6 12,13 2,6"></polyline>
+          </svg>
+        </button>
+        <button class="dock-btn" data-tab="tasks" title="Tasks & Budgets">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="8" y1="6" x2="21" y2="6"></line>
+            <line x1="8" y1="12" x2="21" y2="12"></line>
+            <line x1="8" y1="18" x2="21" y2="18"></line>
+            <polyline points="3 6 4 7 6 5"></polyline>
+            <polyline points="3 12 4 13 6 11"></polyline>
+            <polyline points="3 18 4 19 6 17"></polyline>
+          </svg>
+        </button>
+        <button class="dock-btn" data-tab="team" title="Users & Payees">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+        </button>
+        <button class="dock-btn" data-tab="vault" title="Cards & Wallets">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+          </svg>
+        </button>
+        <button class="dock-btn" data-tab="settings" title="Settings">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </button>
+      </nav>
+
+      <!-- Bottom Dock Actions -->
+      <div class="dock-bottom-group">
+        <button class="dock-btn small" title="Help & Documentation" id="helpBtn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+        </button>
+        <button class="dock-btn small" title="Logout" id="logoutBtn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Canvas -->
+    <div class="main-canvas">
+      
+      <!-- Top Header Bar -->
+      <header class="top-header">
+        <div class="brand-badge">
+          <div class="brand-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+            </svg>
+          </div>
+          <span class="brand-name">TrackMint</span>
         </div>
-        <nav class="nav">
-          <a href="#features">Features</a>
-          <a href="#how-it-works">How it works</a>
-          <a href="#tech-stack">Stack</a>
-          <a href="#contact">Contact</a>
+
+        <!-- Center Nav Tabs Pill -->
+        <nav class="center-nav-pill">
+          <button class="nav-tab active" data-section="overview">Overview</button>
+          <button class="nav-tab" data-section="activity">Activity</button>
+          <button class="nav-tab" data-section="manage">Manage</button>
+          <button class="nav-tab" data-section="program">Program</button>
+          <button class="nav-tab" data-section="account">Account</button>
+          <button class="nav-tab" data-section="reports">Reports</button>
         </nav>
-        <a class="button button-primary" href="#cta">Launch app</a>
+
+        <!-- Right Utility Bar -->
+        <div class="header-right-utils">
+          <button class="icon-circle-btn" id="headerSearchBtn" title="Quick Search">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </button>
+          <button class="icon-circle-btn" id="notificationsBtn" title="Notifications">
+            <span class="notif-badge"></span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+          </button>
+          <button class="icon-circle-btn" id="infoCircleBtn" title="Platform Information">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+          </button>
+
+          <!-- User Profile Pill -->
+          <div class="user-profile-pill" id="userProfileBtn">
+            <div class="user-avatar-img">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="User Avatar" />
+            </div>
+            <div class="user-meta">
+              <span class="user-name-label">Sajibur Rahman</span>
+              <span class="user-email-label">sajibur.rahman@gm...</span>
+            </div>
+            <svg class="chevron-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </div>
+        </div>
+      </header>
+
+      <!-- Welcome Banner -->
+      <section class="welcome-banner">
+        <h1 class="welcome-heading">Good morning, <span class="highlight-name" id="displayUserName">Sajibur</span></h1>
+        <p class="welcome-subtext">Stay on top of your tasks, monitor progress, and track status.</p>
+      </section>
+
+      <!-- Main Dashboard Grid -->
+      <main class="dashboard-grid">
+        
+        <!-- ================= ROW 1 / TOP SECTION ================= -->
+        
+        <!-- CARD 1: Total Balance & Wallets Widget -->
+        <article class="dash-card balance-card">
+          <div class="card-header-flex">
+            <span class="card-label-sub">Total Balance</span>
+            <div class="currency-dropdown">
+              <button class="currency-trigger" id="currencySelectBtn">
+                <span class="flag-icon" id="activeFlagIcon">🇺🇸</span>
+                <span id="currentCurrencyCode">USD</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+              <div class="dropdown-menu" id="currencyDropdownMenu">
+                <div class="currency-option active" data-curr="USD" data-symbol="$" data-rate="1" data-flag="🇺🇸">🇺🇸 USD ($)</div>
+                <div class="currency-option" data-curr="EUR" data-symbol="€" data-rate="0.92" data-flag="🇪🇺">🇪🇺 EUR (€)</div>
+                <div class="currency-option" data-curr="GBP" data-symbol="£" data-rate="0.79" data-flag="🇬🇧">🇬🇧 GBP (£)</div>
+                <div class="currency-option" data-curr="INR" data-symbol="₹" data-rate="83.5" data-flag="🇮🇳">🇮🇳 INR (₹)</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="balance-big-val" id="totalBalanceVal">$689,372.00</div>
+          <div class="balance-trend">
+            <span class="trend-indicator up">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <polyline points="18 15 12 9 6 15"></polyline>
+              </svg>
+              5%
+            </span>
+            <span class="trend-note">than last month</span>
+          </div>
+
+          <!-- Dual Action Buttons -->
+          <div class="balance-actions-row">
+            <button class="btn-dark-pill" id="openAddExpenseBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="7" y1="17" x2="17" y2="7"></line>
+                <polyline points="7 7 17 7 17 17"></polyline>
+              </svg>
+              Transfer
+            </button>
+            <button class="btn-light-pill" id="openSetBudgetBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="17 1 21 5 17 9"></polyline>
+                <path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
+                <polyline points="7 23 3 19 7 15"></polyline>
+                <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
+              </svg>
+              Request
+            </button>
+          </div>
+
+          <!-- Wallets Subsection -->
+          <div class="wallets-subsection">
+            <div class="wallets-header">
+              <span class="wallets-title">Wallets</span>
+              <span class="wallets-sep">|</span>
+              <span class="wallets-count">Total 6 wallets</span>
+            </div>
+            
+            <div class="wallets-scroll-track" id="walletsTrack">
+              <!-- Wallet Item 1 -->
+              <div class="wallet-mini-card active">
+                <div class="wallet-top-row">
+                  <div class="wallet-flag-tag">
+                    <span class="flag">🇺🇸</span>
+                    <span class="code">USD</span>
+                  </div>
+                  <button class="dots-btn">•••</button>
+                </div>
+                <div class="wallet-amount">$22,678.00</div>
+                <div class="wallet-limit">Limit is $10k a month</div>
+                <span class="status-pill active">Active</span>
+              </div>
+
+              <!-- Wallet Item 2 -->
+              <div class="wallet-mini-card">
+                <div class="wallet-top-row">
+                  <div class="wallet-flag-tag">
+                    <span class="flag">🇪🇺</span>
+                    <span class="code">EUR</span>
+                  </div>
+                  <button class="dots-btn">•••</button>
+                </div>
+                <div class="wallet-amount">€18,345.00</div>
+                <div class="wallet-limit">Limit is €8k a month</div>
+                <span class="status-pill active">Active</span>
+              </div>
+
+              <!-- Wallet Item 3 -->
+              <div class="wallet-mini-card">
+                <div class="wallet-top-row">
+                  <div class="wallet-flag-tag">
+                    <span class="flag">🇬🇧</span>
+                    <span class="code">GBP</span>
+                  </div>
+                  <button class="dots-btn">•••</button>
+                </div>
+                <div class="wallet-amount">£15,000.00</div>
+                <div class="wallet-limit">Limit is £7.5k a month</div>
+                <span class="status-pill inactive">Inactive</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- CARD 2: 2x2 Metric Cards Grid -->
+        <div class="metrics-quad-grid">
+          
+          <!-- Metric 1: Total Earnings (Radiant Orange Card) -->
+          <article class="quad-card vibrant-orange">
+            <div class="quad-top">
+              <span class="quad-title">Total Earnings</span>
+              <div class="quad-icon-box">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                  <path d="M7 15h0M2 9.5h20"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="quad-value" id="totalEarningsVal">$950</div>
+            <div class="quad-trend">
+              <span class="trend-chip light-on-orange">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                7%
+              </span>
+              <span class="trend-text">this month</span>
+            </div>
+          </article>
+
+          <!-- Metric 2: Total Spending -->
+          <article class="quad-card">
+            <div class="quad-top">
+              <span class="quad-title">Total Spending</span>
+              <div class="quad-icon-box subtle">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="quad-value" id="totalSpendingVal">$700</div>
+            <div class="quad-trend">
+              <span class="trend-chip danger">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                5%
+              </span>
+              <span class="trend-text">this month</span>
+            </div>
+          </article>
+
+          <!-- Metric 3: Total Income -->
+          <article class="quad-card">
+            <div class="quad-top">
+              <span class="quad-title">Total Income</span>
+              <div class="quad-icon-box subtle">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                  <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                  <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="quad-value" id="totalIncomeVal">$1,050</div>
+            <div class="quad-trend">
+              <span class="trend-chip success">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                8%
+              </span>
+              <span class="trend-text">this month</span>
+            </div>
+          </article>
+
+          <!-- Metric 4: Total Revenue -->
+          <article class="quad-card">
+            <div class="quad-top">
+              <span class="quad-title">Total Revenue</span>
+              <div class="quad-icon-box subtle">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                  <line x1="3" y1="6" x2="21" y2="6"></line>
+                  <path d="M16 10a4 4 0 0 1-8 0"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="quad-value" id="totalRevenueVal">$850</div>
+            <div class="quad-trend">
+              <span class="trend-chip success">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                4%
+              </span>
+              <span class="trend-text">this month</span>
+            </div>
+          </article>
+        </div>
+
+        <!-- CARD 3: Total Income & Spending Chart -->
+        <article class="dash-card chart-card">
+          <div class="chart-header">
+            <div>
+              <h2 class="chart-main-title">Total Income</h2>
+              <p class="chart-sub-title">View your income in a certain period of time</p>
+            </div>
+            <div class="chart-legend-row">
+              <div class="legend-item">
+                <span class="legend-dot profit"></span>
+                <span>Profit</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-dot loss"></span>
+                <span>Loss</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="chart-container" id="incomeChartWrapper">
+            <!-- Custom Dynamic Dual Bar SVG Chart -->
+            <svg class="income-bar-chart" id="incomeSvgChart" viewBox="0 0 480 240" preserveAspectRatio="none">
+              <defs>
+                <pattern id="stripedLossPattern" width="6" height="6" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+                  <line x1="0" y1="0" x2="0" y2="6" stroke="#FF5C28" stroke-width="3" />
+                  <line x1="3" y1="0" x2="3" y2="6" stroke="#FFA785" stroke-width="3" />
+                </pattern>
+              </defs>
+              
+              <!-- Y-Axis Grid Lines & Labels -->
+              <g class="chart-grid">
+                <line x1="40" y1="30" x2="460" y2="30" stroke="var(--border-subtle)" stroke-dasharray="3,3" />
+                <text x="15" y="34" class="axis-label">50k</text>
+
+                <line x1="40" y1="70" x2="460" y2="70" stroke="var(--border-subtle)" stroke-dasharray="3,3" />
+                <text x="15" y="74" class="axis-label">40k</text>
+
+                <line x1="40" y1="110" x2="460" y2="110" stroke="var(--border-subtle)" stroke-dasharray="3,3" />
+                <text x="15" y="114" class="axis-label">30k</text>
+
+                <line x1="40" y1="150" x2="460" y2="150" stroke="var(--border-subtle)" stroke-dasharray="3,3" />
+                <text x="15" y="154" class="axis-label">20k</text>
+
+                <line x1="40" y1="190" x2="460" y2="190" stroke="var(--border-subtle)" stroke-dasharray="3,3" />
+                <text x="15" y="194" class="axis-label">10k</text>
+
+                <line x1="40" y1="210" x2="460" y2="210" stroke="var(--border-strong)" />
+                <text x="15" y="214" class="axis-label">00</text>
+              </g>
+
+              <!-- Dynamic Chart Bars Group -->
+              <g id="chartBarsGroup"></g>
+            </svg>
+
+            <!-- Chart Hover Tooltip -->
+            <div class="chart-tooltip" id="chartTooltip"></div>
+          </div>
+        </article>
+
+        <!-- ================= ROW 2 / BOTTOM SECTION ================= -->
+
+        <!-- LEFT COLUMN: Spending Limit & Cards Container -->
+        <div class="limit-and-cards-col">
+          
+          <!-- CARD 4: Monthly Spending Limit -->
+          <article class="dash-card spending-limit-card">
+            <div class="card-header-flex">
+              <span class="card-title-bold">Monthly Spending Limit</span>
+              <span class="limit-pct-badge" id="limitPctBadge">25.4%</span>
+            </div>
+            
+            <div class="spending-progress-bar-wrap">
+              <div class="spending-progress-fill" id="spendingProgressFill" style="width: 25.4%;"></div>
+            </div>
+
+            <div class="spending-limit-labels">
+              <span class="spent-val" id="spentValText"><strong>$1,400.00</strong> spent out of</span>
+              <span class="total-limit-val" id="totalLimitValText">$5,500.00</span>
+            </div>
+          </article>
+
+          <!-- CARD 5: My Cards Widget -->
+          <article class="dash-card my-cards-card">
+            <div class="card-header-flex">
+              <div class="cards-title-wrap">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                  <line x1="1" y1="10" x2="23" y2="10"></line>
+                </svg>
+                <span class="card-title-bold">My Cards</span>
+              </div>
+              <button class="add-new-btn" id="openAddCardBtn">+ Add new</button>
+            </div>
+
+            <div class="cards-carousel">
+              <!-- Physical Card 1: Sleek Matte Charcoal Master Card -->
+              <div class="credit-card-item card-matte-dark">
+                <div class="card-top-row">
+                  <div class="card-nfc-wrap">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
+                      <path d="M1.42 9a16 16 0 0 1 21.16 0"></path>
+                      <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+                      <line x1="12" y1="20" x2="12.01" y2="20"></line>
+                    </svg>
+                    <span class="card-status-badge">Active</span>
+                  </div>
+                  <div class="mastercard-logo">
+                    <span class="mc-circle red"></span>
+                    <span class="mc-circle orange"></span>
+                  </div>
+                </div>
+
+                <div class="card-bottom-row">
+                  <div class="card-info-col">
+                    <span class="card-info-lbl">Card Number</span>
+                    <span class="card-info-val">•••• •••• 6782</span>
+                  </div>
+                  <div class="card-info-col">
+                    <span class="card-info-lbl">EXP</span>
+                    <span class="card-info-val">09/29</span>
+                  </div>
+                  <div class="card-info-col">
+                    <span class="card-info-lbl">CVV</span>
+                    <span class="card-info-val">611</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Physical Card 2: Radiant Coral Orange Card -->
+              <div class="credit-card-item card-coral-radiant">
+                <div class="card-top-row">
+                  <div class="card-nfc-wrap">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
+                      <path d="M1.42 9a16 16 0 0 1 21.16 0"></path>
+                      <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+                    </svg>
+                    <span class="card-status-badge white-glass">Active</span>
+                  </div>
+                </div>
+
+                <div class="card-sparkle-decor">✦</div>
+
+                <div class="card-bottom-row">
+                  <div class="card-info-col">
+                    <span class="card-info-lbl">Card Number</span>
+                    <span class="card-info-val">•••• •••• 4356</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <!-- CARD 6: Recent Activities Data Table (Spans Middle & Right) -->
+        <article class="dash-card activities-card">
+          <div class="activities-header">
+            <h2 class="card-title-bold">Recent Activities</h2>
+            
+            <div class="activities-filter-row">
+              <div class="search-input-pill">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="activitySearchInput" placeholder="Search activities..." />
+              </div>
+
+              <div class="filter-dropdown-wrap">
+                <button class="filter-pill-btn" id="filterToggleBtn">
+                  <span>Filter</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="4" y1="21" x2="4" y2="14"></line>
+                    <line x1="4" y1="10" x2="4" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12" y2="3"></line>
+                    <line x1="20" y1="21" x2="20" y2="16"></line>
+                    <line x1="20" y1="12" x2="20" y2="3"></line>
+                    <line x1="1" y1="14" x2="7" y2="14"></line>
+                    <line x1="9" y1="8" x2="15" y2="8"></line>
+                    <line x1="17" y1="16" x2="23" y2="16"></line>
+                  </svg>
+                </button>
+                <div class="dropdown-menu right" id="filterDropdownMenu">
+                  <div class="filter-option active" data-status="ALL">All Statuses</div>
+                  <div class="filter-option" data-status="Completed">Completed Only</div>
+                  <div class="filter-option" data-status="Pending">Pending Only</div>
+                  <div class="filter-option" data-status="In Progress">In Progress Only</div>
+                  <hr class="dropdown-divider" />
+                  <div class="filter-option export" id="exportCsvBtn">📥 Export to CSV</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Table Container -->
+          <div class="table-responsive">
+            <table class="activities-table" id="activitiesTable">
+              <thead>
+                <tr>
+                  <th class="col-chk">
+                    <input type="checkbox" id="selectAllCheckbox" title="Select all" />
+                  </th>
+                  <th>Order ID</th>
+                  <th>Activity</th>
+                  <th>Price</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                  <th class="col-action"></th>
+                </tr>
+              </thead>
+              <tbody id="activitiesTableBody">
+                <!-- Dynamically Rendered Via JS -->
+              </tbody>
+            </table>
+          </div>
+          
+          <!-- Table Footer -->
+          <div class="table-footer-flex">
+            <span class="selected-count-msg" id="selectedCountMsg">0 items selected</span>
+            <div class="pagination-controls">
+              <button class="page-nav-btn" id="prevPageBtn" disabled>‹</button>
+              <span class="page-indicator" id="pageIndicatorText">Page 1 of 1</span>
+              <button class="page-nav-btn" id="nextPageBtn" disabled>›</button>
+            </div>
+          </div>
+        </article>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ================= MODALS & DIALOGS ================= -->
+
+  <!-- Modal 1: Add Expense / Transaction Modal -->
+  <div class="modal-overlay" id="addExpenseModal" aria-hidden="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Record New Expense</h3>
+        <button class="modal-close-btn" id="closeAddExpenseModal">&times;</button>
       </div>
-    </header>
+      <form id="addExpenseForm" class="modal-form">
+        <div class="form-group">
+          <label for="expenseTitleInput">Activity / Merchant Name</label>
+          <input type="text" id="expenseTitleInput" placeholder="e.g. Adobe Creative Cloud, Flight Ticket" required />
+        </div>
 
-    <main>
-      <section class="hero">
-        <div class="container hero-grid">
-          <div class="hero-copy">
-            <p class="eyebrow">Personal finance, simplified</p>
-            <h1>Take control of your money with clarity.</h1>
-            <p class="subtext">
-              TrackMint helps you log daily expenses, stay within monthly
-              budgets, and understand where your money is going before it slips
-              away.
-            </p>
-            <div class="cta-row">
-              <a class="button button-primary" href="#features"
-                >Explore features</a
-              >
-              <a class="button button-secondary" href="../README.md"
-                >Read docs</a
-              >
-            </div>
-            <ul class="trust-points">
-              <li>SQLite-powered persistence</li>
-              <li>Multi-user support</li>
-              <li>Budget and category analytics</li>
-            </ul>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="expenseAmountInput">Price / Amount</label>
+            <input type="number" id="expenseAmountInput" step="0.01" min="0.01" placeholder="150.00" required />
           </div>
-
-          <div class="hero-panel">
-            <div class="panel-card">
-              <div class="panel-top">
-                <span class="status-dot"></span>
-                <span>Monthly overview</span>
-              </div>
-              <div class="metric-row">
-                <div>
-                  <p>Total spent</p>
-                  <h3>$1,240</h3>
-                </div>
-                <div class="trend positive">+12.4%</div>
-              </div>
-              <div class="progress-block">
-                <div class="progress-labels">
-                  <span>Budget left</span>
-                  <span>$760</span>
-                </div>
-                <div class="progress-bar">
-                  <span style="width: 62%"></span>
-                </div>
-              </div>
-              <div class="mini-grid">
-                <div>
-                  <label>Food</label>
-                  <strong>$340</strong>
-                </div>
-                <div>
-                  <label>Travel</label>
-                  <strong>$280</strong>
-                </div>
-                <div>
-                  <label>Bills</label>
-                  <strong>$410</strong>
-                </div>
-                <div>
-                  <label>Shopping</label>
-                  <strong>$210</strong>
-                </div>
-              </div>
-            </div>
+          <div class="form-group">
+            <label for="expenseCategorySelect">Category</label>
+            <select id="expenseCategorySelect" required>
+              <option value="SOFTWARE">Software / Apps</option>
+              <option value="HOTEL">Hotel & Stay</option>
+              <option value="TRAVEL">Flight & Travel</option>
+              <option value="GROCERY">Grocery & Food</option>
+              <option value="SHOPPING">Shopping & Retail</option>
+              <option value="BILLS">Bills & Utilities</option>
+              <option value="OTHER">Other</option>
+            </select>
           </div>
         </div>
-      </section>
 
-      <section class="stats">
-        <div class="container stats-grid">
-          <div>
-            <strong>100%</strong>
-            <span>Local-first tracking</span>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="expenseStatusSelect">Status</label>
+            <select id="expenseStatusSelect" required>
+              <option value="Completed">Completed</option>
+              <option value="Pending">Pending</option>
+              <option value="In Progress">In Progress</option>
+            </select>
           </div>
-          <div>
-            <strong>8</strong>
-            <span>Expense categories</span>
-          </div>
-          <div>
-            <strong>1</strong>
-            <span>User dashboard</span>
-          </div>
-          <div>
-            <strong>24/7</strong>
-            <span>Personal clarity</span>
+          <div class="form-group">
+            <label for="expenseDateInput">Date & Time</label>
+            <input type="datetime-local" id="expenseDateInput" required />
           </div>
         </div>
-      </section>
 
-      <section id="features" class="section">
-        <div class="container">
-          <div class="section-heading">
-            <p class="eyebrow">Key capabilities</p>
-            <h2>Designed for everyday financial discipline.</h2>
-          </div>
-
-          <div class="card-grid">
-            <article class="feature-card">
-              <div class="icon">✦</div>
-              <h3>Expense tracking</h3>
-              <p>
-                Add, update, and remove expenses with titles, categories,
-                payment modes, notes, and dates for complete visibility.
-              </p>
-            </article>
-
-            <article class="feature-card">
-              <div class="icon">◎</div>
-              <h3>Budget management</h3>
-              <p>
-                Set monthly budgets and compare planned spending against actual
-                costs to stay on target throughout the month.
-              </p>
-            </article>
-
-            <article class="feature-card">
-              <div class="icon">▣</div>
-              <h3>Smart analytics</h3>
-              <p>
-                View monthly totals, category-wise summaries, remaining budget,
-                and top-spending categories without extra tools.
-              </p>
-            </article>
-
-            <article class="feature-card">
-              <div class="icon">▤</div>
-              <h3>Secure user access</h3>
-              <p>
-                Register and log in with per-user data separation, making each
-                profile private and focused on personal spending history.
-              </p>
-            </article>
-          </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel" id="cancelAddExpenseBtn">Cancel</button>
+          <button type="submit" class="btn-submit">Add Activity</button>
         </div>
-      </section>
+      </form>
+    </div>
+  </div>
 
-      <section id="how-it-works" class="section section-alt">
-        <div class="container">
-          <div class="section-heading">
-            <p class="eyebrow">How it works</p>
-            <h2>From daily spending to smarter decisions.</h2>
-          </div>
-
-          <div class="steps">
-            <div class="step-item">
-              <span>01</span>
-              <h3>Create your profile</h3>
-              <p>
-                Register with a name and email to keep your financial records
-                organized.
-              </p>
-            </div>
-            <div class="step-item">
-              <span>02</span>
-              <h3>Log expenses</h3>
-              <p>
-                Capture categories, amounts, and payment types in seconds with a
-                simple CLI flow.
-              </p>
-            </div>
-            <div class="step-item">
-              <span>03</span>
-              <h3>Set a monthly budget</h3>
-              <p>
-                Establish spending limits and compare them with actual spending
-                trends.
-              </p>
-            </div>
-            <div class="step-item">
-              <span>04</span>
-              <h3>Review insights</h3>
-              <p>
-                Use dashboard summaries and analytics to identify spending
-                patterns and improve decisions.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="tech-stack" class="section">
-        <div class="container tech-wrap">
-          <div class="section-heading left-align">
-            <p class="eyebrow">Built with</p>
-            <h2>Reliable Java tools for real-world utility.</h2>
-          </div>
-          <div class="tech-list">
-            <span>Java</span>
-            <span>JDBC</span>
-            <span>SQLite</span>
-            <span>OOP Design</span>
-            <span>Console UI</span>
-            <span>GitHub</span>
-          </div>
-        </div>
-      </section>
-
-      <section id="cta" class="cta-section">
-        <div class="container cta-box">
-          <div>
-            <p class="eyebrow">Ready to get started?</p>
-            <h2>Build stronger financial habits with TrackMint.</h2>
-          </div>
-          <a class="button button-primary" href="../README.md"
-            >View project guide</a
-          >
-        </div>
-      </section>
-    </main>
-
-    <footer id="contact" class="site-footer">
-      <div class="container footer-wrap">
-        <p>© <span id="year"></span> TrackMint</p>
-        <p>Expense tracking for people who want clarity and control.</p>
+  <!-- Modal 2: Set Budget Modal -->
+  <div class="modal-overlay" id="setBudgetModal" aria-hidden="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Configure Monthly Budget</h3>
+        <button class="modal-close-btn" id="closeSetBudgetModal">&times;</button>
       </div>
-    </footer>
+      <form id="setBudgetForm" class="modal-form">
+        <div class="form-group">
+          <label for="budgetLimitInput">Monthly Spending Limit</label>
+          <input type="number" id="budgetLimitInput" step="50" min="100" placeholder="5500.00" required />
+        </div>
+        <p class="modal-help-text">Setting a limit allows TrackMint to notify you when spending approaches your monthly limit.</p>
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel" id="cancelSetBudgetBtn">Cancel</button>
+          <button type="submit" class="btn-submit">Save Budget</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
-    <script src="script.js"></script>
-  </body>
+  <!-- Modal 3: Help / Docs Modal -->
+  <div class="modal-overlay" id="helpModal" aria-hidden="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">TrackMint Dashboard Guide</h3>
+        <button class="modal-close-btn" id="closeHelpModal">&times;</button>
+      </div>
+      <div class="modal-content-body">
+        <p><strong>Overview:</strong> TrackMint provides high-velocity personal expense tracking and monthly budget insights.</p>
+        <ul style="margin: 12px 0 16px 20px; line-height: 1.8;">
+          <li><strong>Switch Currency:</strong> Use the top-left currency trigger to view amounts in USD, EUR, GBP, or INR.</li>
+          <li><strong>Add Expenses:</strong> Click "Transfer" or use the top action button to log an expense.</li>
+          <li><strong>Set Budget:</strong> Click "Request" to update your monthly spending ceiling.</li>
+          <li><strong>Table Controls:</strong> Search, filter by status, select rows, and export records as CSV.</li>
+          <li><strong>Light/Dark Mode:</strong> Click the sun/moon icon at the top of the left dock.</li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-submit" id="okHelpBtn">Got it</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="script.js"></script>
+</body>
 </html>
