@@ -5,6 +5,7 @@ import com.trackmint.util.FormatUtil;
 import com.trackmint.util.InputUtil;
 import com.trackmint.util.ValidationUtil;
 import java.util.Map;
+import java.util.OptionalDouble;
 
 public class AnalyticsMenu {
     private final AnalyticsService analyticsService = new AnalyticsService();
@@ -81,15 +82,21 @@ public class AnalyticsMenu {
 
     private void viewRemainingBudget() {
         String month = getValidMonth();
-        double remaining = analyticsService.getRemainingBudget(userId, month);
+        OptionalDouble remainingOpt = analyticsService.getRemainingBudget(userId, month);
 
         FormatUtil.printSection("Remaining Budget");
         System.out.println("Month : " + month);
 
-        if (remaining == -1) {
+        if (remainingOpt.isEmpty()) {
             System.out.println("No budget set for this month.");
         } else {
+            double remaining = remainingOpt.getAsDouble();
             System.out.println("Remaining Budget : " + FormatUtil.formatCurrency(remaining));
+            if (remaining < 0) {
+                System.out.println("Status           : Budget exceeded by " + FormatUtil.formatCurrency(Math.abs(remaining)) + "!");
+            } else {
+                System.out.println("Status           : Within budget");
+            }
         }
 
         FormatUtil.printLine();

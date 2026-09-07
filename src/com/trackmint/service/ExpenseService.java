@@ -4,6 +4,7 @@ import com.trackmint.model.Category;
 import com.trackmint.model.Expense;
 import com.trackmint.model.PaymentMode;
 import com.trackmint.repository.ExpenseRepository;
+import com.trackmint.util.ValidationUtil;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -11,19 +12,27 @@ import java.util.List;
 public class ExpenseService {
     private final ExpenseRepository expenseRepository = new ExpenseRepository();
 
-    public void addExpense(int userId, String title, double amount, String category,
-                           String paymentMode, String expenseDate, String notes) {
+    public void addExpense(int userId, String title, double amount, Category category,
+                           PaymentMode paymentMode, LocalDate expenseDate, String notes) {
         Expense expense = new Expense(
                 0,
                 userId,
                 title,
                 amount,
-                Category.valueOf(category.toUpperCase()),
-                PaymentMode.valueOf(paymentMode.toUpperCase()),
-                LocalDate.parse(expenseDate),
+                category,
+                paymentMode,
+                expenseDate,
                 notes
         );
         expenseRepository.addExpense(expense);
+    }
+
+    public void addExpense(int userId, String title, double amount, String category,
+                           String paymentMode, String expenseDate, String notes) {
+        Category cat = ValidationUtil.parseCategory(category).orElse(Category.OTHERS);
+        PaymentMode mode = ValidationUtil.parsePaymentMode(paymentMode).orElse(PaymentMode.CASH);
+        LocalDate date = ValidationUtil.isValidDate(expenseDate) ? LocalDate.parse(expenseDate) : LocalDate.now();
+        addExpense(userId, title, amount, cat, mode, date, notes);
     }
 
     public List<Expense> getAllExpenses() {
@@ -34,19 +43,31 @@ public class ExpenseService {
         return expenseRepository.getAllExpensesByUser(userId);
     }
 
-    public void updateExpense(int id, int userId, String title, double amount, String category,
-                              String paymentMode, String expenseDate, String notes) {
+    public Expense getExpenseByIdAndUser(int id, int userId) {
+        return expenseRepository.getExpenseByIdAndUser(id, userId);
+    }
+
+    public void updateExpense(int id, int userId, String title, double amount, Category category,
+                              PaymentMode paymentMode, LocalDate expenseDate, String notes) {
         Expense expense = new Expense(
                 id,
                 userId,
                 title,
                 amount,
-                Category.valueOf(category.toUpperCase()),
-                PaymentMode.valueOf(paymentMode.toUpperCase()),
-                LocalDate.parse(expenseDate),
+                category,
+                paymentMode,
+                expenseDate,
                 notes
         );
         expenseRepository.updateExpense(expense);
+    }
+
+    public void updateExpense(int id, int userId, String title, double amount, String category,
+                              String paymentMode, String expenseDate, String notes) {
+        Category cat = ValidationUtil.parseCategory(category).orElse(Category.OTHERS);
+        PaymentMode mode = ValidationUtil.parsePaymentMode(paymentMode).orElse(PaymentMode.CASH);
+        LocalDate date = ValidationUtil.isValidDate(expenseDate) ? LocalDate.parse(expenseDate) : LocalDate.now();
+        updateExpense(id, userId, title, amount, cat, mode, date, notes);
     }
 
     public void deleteExpense(int id, int userId) {

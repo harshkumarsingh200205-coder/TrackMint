@@ -37,15 +37,15 @@ public class UserRepository {
             pstmt.setString(1, email);
             pstmt.setString(2, password);
 
-            ResultSet rs = pstmt.executeQuery();
-
-            if (rs.next()) {
-                return new User(
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        rs.getString("email"),
-                        rs.getString("password")
-                );
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return new User(
+                            rs.getInt("id"),
+                            rs.getString("name"),
+                            rs.getString("email"),
+                            rs.getString("password")
+                    );
+                }
             }
 
         } catch (SQLException e) {

@@ -7,6 +7,7 @@ import java.time.YearMonth;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.OptionalDouble;
 
 public class AnalyticsService {
     private final ExpenseService expenseService = new ExpenseService();
@@ -35,14 +36,14 @@ public class AnalyticsService {
         return categoryTotals;
     }
 
-    public double getRemainingBudget(int userId, String month) {
+    public OptionalDouble getRemainingBudget(int userId, String month) {
         Budget budget = budgetService.getBudgetByUserAndMonth(userId, month);
 
         if (budget == null) {
-            return -1;
+            return OptionalDouble.empty();
         }
 
-        return budget.getTotalBudget() - getMonthlyTotal(userId, month);
+        return OptionalDouble.of(budget.getTotalBudget() - getMonthlyTotal(userId, month));
     }
 
     public String getTopCategory(int userId, String month) {
@@ -53,7 +54,7 @@ public class AnalyticsService {
         }
 
         String topCategory = null;
-        double max = Double.MIN_VALUE;
+        double max = -1.0;
 
         for (Map.Entry<String, Double> entry : categoryTotals.entrySet()) {
             if (entry.getValue() > max) {
@@ -62,6 +63,6 @@ public class AnalyticsService {
             }
         }
 
-        return topCategory;
+        return topCategory != null ? topCategory : "No expenses found";
     }
 }

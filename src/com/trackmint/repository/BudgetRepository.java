@@ -21,21 +21,21 @@ public class BudgetRepository {
             checkStmt.setInt(1, budget.getUserId());
             checkStmt.setString(2, budget.getMonth());
 
-            ResultSet rs = checkStmt.executeQuery();
-
-            if (rs.next()) {
-                try (PreparedStatement updateStmt = conn.prepareStatement(updateSql)) {
-                    updateStmt.setDouble(1, budget.getTotalBudget());
-                    updateStmt.setInt(2, budget.getUserId());
-                    updateStmt.setString(3, budget.getMonth());
-                    updateStmt.executeUpdate();
-                }
-            } else {
-                try (PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
-                    insertStmt.setInt(1, budget.getUserId());
-                    insertStmt.setString(2, budget.getMonth());
-                    insertStmt.setDouble(3, budget.getTotalBudget());
-                    insertStmt.executeUpdate();
+            try (ResultSet rs = checkStmt.executeQuery()) {
+                if (rs.next()) {
+                    try (PreparedStatement updateStmt = conn.prepareStatement(updateSql)) {
+                        updateStmt.setDouble(1, budget.getTotalBudget());
+                        updateStmt.setInt(2, budget.getUserId());
+                        updateStmt.setString(3, budget.getMonth());
+                        updateStmt.executeUpdate();
+                    }
+                } else {
+                    try (PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
+                        insertStmt.setInt(1, budget.getUserId());
+                        insertStmt.setString(2, budget.getMonth());
+                        insertStmt.setDouble(3, budget.getTotalBudget());
+                        insertStmt.executeUpdate();
+                    }
                 }
             }
 
@@ -55,15 +55,15 @@ public class BudgetRepository {
             pstmt.setInt(1, userId);
             pstmt.setString(2, month);
 
-            ResultSet rs = pstmt.executeQuery();
-
-            if (rs.next()) {
-                return new Budget(
-                        rs.getInt("id"),
-                        rs.getInt("user_id"),
-                        rs.getString("month"),
-                        rs.getDouble("total_budget")
-                );
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return new Budget(
+                            rs.getInt("id"),
+                            rs.getInt("user_id"),
+                            rs.getString("month"),
+                            rs.getDouble("total_budget")
+                    );
+                }
             }
 
         } catch (SQLException e) {

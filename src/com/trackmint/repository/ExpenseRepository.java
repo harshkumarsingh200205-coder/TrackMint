@@ -71,20 +71,21 @@ public class ExpenseRepository {
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, userId);
-            ResultSet rs = pstmt.executeQuery();
 
-            while (rs.next()) {
-                Expense expense = new Expense(
-                        rs.getInt("id"),
-                        rs.getInt("user_id"),
-                        rs.getString("title"),
-                        rs.getDouble("amount"),
-                        Category.valueOf(rs.getString("category")),
-                        PaymentMode.valueOf(rs.getString("payment_mode")),
-                        LocalDate.parse(rs.getString("expense_date")),
-                        rs.getString("notes")
-                );
-                expenses.add(expense);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Expense expense = new Expense(
+                            rs.getInt("id"),
+                            rs.getInt("user_id"),
+                            rs.getString("title"),
+                            rs.getDouble("amount"),
+                            Category.valueOf(rs.getString("category")),
+                            PaymentMode.valueOf(rs.getString("payment_mode")),
+                            LocalDate.parse(rs.getString("expense_date")),
+                            rs.getString("notes")
+                    );
+                    expenses.add(expense);
+                }
             }
 
         } catch (SQLException e) {
@@ -92,6 +93,37 @@ public class ExpenseRepository {
         }
 
         return expenses;
+    }
+
+    public Expense getExpenseByIdAndUser(int id, int userId) {
+        String sql = "SELECT * FROM expenses WHERE id = ? AND user_id = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, id);
+            pstmt.setInt(2, userId);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return new Expense(
+                            rs.getInt("id"),
+                            rs.getInt("user_id"),
+                            rs.getString("title"),
+                            rs.getDouble("amount"),
+                            Category.valueOf(rs.getString("category")),
+                            PaymentMode.valueOf(rs.getString("payment_mode")),
+                            LocalDate.parse(rs.getString("expense_date")),
+                            rs.getString("notes")
+                    );
+                }
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error fetching expense: " + e.getMessage());
+        }
+
+        return null;
     }
 
     public void updateExpense(Expense expense) {
