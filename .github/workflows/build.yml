@@ -1,4 +1,4 @@
-name: Build & Verify
+name: Build & Test
 
 on:
   push:
@@ -7,15 +7,15 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
-    name: Build & Smoke Test
+  build-and-test:
+    name: Build, Test & Smoke Verify
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up JDK 17
@@ -24,26 +24,21 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Compile on Linux / macOS
+      - name: Compile and Run Unit Tests (Linux)
         if: runner.os != 'Windows'
         run: |
           mkdir -p out
-          find src -name "*.java" > sources.txt
+          find src test -name "*.java" > sources.txt
           javac -cp "lib/*" -d out @sources.txt
+          java -jar lib/junit-platform-console-standalone-1.10.2.jar execute -cp "out:lib/*" --scan-classpath --disable-banner
 
-      - name: Smoke Test on Linux / macOS
-        if: runner.os != 'Windows'
-        run: |
-          echo "3" | java --enable-native-access=ALL-UNNAMED -cp "out:lib/*" com.trackmint.app.Main
-
-      - name: Compile on Windows
+      - name: Compile and Run Unit Tests (Windows)
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          if (!(Test-Path out)) { New-Item -ItemType Directory -Path out }
-          javac -cp "lib/*" -d out (Get-ChildItem -Recurse -Filter *.java | ForEach-Object { $_.FullName })
+          .\run_tests.ps1
 
-      - name: Smoke Test on Windows
+      - name: Run CLI Smoke Test
         if: runner.os == 'Windows'
         shell: pwsh
         run: |

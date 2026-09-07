@@ -14,13 +14,20 @@ public class ValidationUtil {
         return title != null && !title.trim().isEmpty();
     }
 
+    public static boolean isValidEmail(String email) {
+        return email != null && email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
+    }
+
     public static boolean isValidAmount(double amount) {
         return amount > 0;
     }
 
     public static boolean isValidDate(String date) {
+        if (date == null || date.trim().isEmpty()) {
+            return false;
+        }
         try {
-            LocalDate.parse(date);
+            LocalDate.parse(date.trim());
             return true;
         } catch (DateTimeParseException e) {
             return false;
@@ -28,8 +35,11 @@ public class ValidationUtil {
     }
 
     public static boolean isValidMonth(String month) {
+        if (month == null || month.trim().isEmpty()) {
+            return false;
+        }
         try {
-            YearMonth.parse(month);
+            YearMonth.parse(month.trim());
             return true;
         } catch (DateTimeParseException e) {
             return false;
