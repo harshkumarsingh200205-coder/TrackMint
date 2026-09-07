@@ -8,11 +8,16 @@ import java.util.Map;
 import java.util.OptionalDouble;
 
 public class AnalyticsMenu {
-    private final AnalyticsService analyticsService = new AnalyticsService();
+    private final AnalyticsService analyticsService;
     private final int userId;
 
     public AnalyticsMenu(int userId) {
+        this(userId, new AnalyticsService());
+    }
+
+    public AnalyticsMenu(int userId, AnalyticsService analyticsService) {
         this.userId = userId;
+        this.analyticsService = analyticsService;
     }
 
     public void showAnalyticsMenu() {

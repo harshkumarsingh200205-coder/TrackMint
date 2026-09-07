@@ -8,12 +8,21 @@ import com.trackmint.util.ValidationUtil;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 public class ExpenseService {
-    private final ExpenseRepository expenseRepository = new ExpenseRepository();
+    private final ExpenseRepository expenseRepository;
 
-    public void addExpense(int userId, String title, double amount, Category category,
-                           PaymentMode paymentMode, LocalDate expenseDate, String notes) {
+    public ExpenseService() {
+        this(new ExpenseRepository());
+    }
+
+    public ExpenseService(ExpenseRepository expenseRepository) {
+        this.expenseRepository = expenseRepository;
+    }
+
+    public boolean addExpense(int userId, String title, double amount, Category category,
+                              PaymentMode paymentMode, LocalDate expenseDate, String notes) {
         Expense expense = new Expense(
                 0,
                 userId,
@@ -24,15 +33,15 @@ public class ExpenseService {
                 expenseDate,
                 notes
         );
-        expenseRepository.addExpense(expense);
+        return expenseRepository.addExpense(expense);
     }
 
-    public void addExpense(int userId, String title, double amount, String category,
-                           String paymentMode, String expenseDate, String notes) {
+    public boolean addExpense(int userId, String title, double amount, String category,
+                              String paymentMode, String expenseDate, String notes) {
         Category cat = ValidationUtil.parseCategory(category).orElse(Category.OTHERS);
         PaymentMode mode = ValidationUtil.parsePaymentMode(paymentMode).orElse(PaymentMode.CASH);
         LocalDate date = ValidationUtil.isValidDate(expenseDate) ? LocalDate.parse(expenseDate) : LocalDate.now();
-        addExpense(userId, title, amount, cat, mode, date, notes);
+        return addExpense(userId, title, amount, cat, mode, date, notes);
     }
 
     public List<Expense> getAllExpenses() {
@@ -47,8 +56,8 @@ public class ExpenseService {
         return expenseRepository.getExpenseByIdAndUser(id, userId);
     }
 
-    public void updateExpense(int id, int userId, String title, double amount, Category category,
-                              PaymentMode paymentMode, LocalDate expenseDate, String notes) {
+    public boolean updateExpense(int id, int userId, String title, double amount, Category category,
+                                 PaymentMode paymentMode, LocalDate expenseDate, String notes) {
         Expense expense = new Expense(
                 id,
                 userId,
@@ -59,26 +68,26 @@ public class ExpenseService {
                 expenseDate,
                 notes
         );
-        expenseRepository.updateExpense(expense);
+        return expenseRepository.updateExpense(expense);
     }
 
-    public void updateExpense(int id, int userId, String title, double amount, String category,
-                              String paymentMode, String expenseDate, String notes) {
+    public boolean updateExpense(int id, int userId, String title, double amount, String category,
+                                 String paymentMode, String expenseDate, String notes) {
         Category cat = ValidationUtil.parseCategory(category).orElse(Category.OTHERS);
         PaymentMode mode = ValidationUtil.parsePaymentMode(paymentMode).orElse(PaymentMode.CASH);
         LocalDate date = ValidationUtil.isValidDate(expenseDate) ? LocalDate.parse(expenseDate) : LocalDate.now();
-        updateExpense(id, userId, title, amount, cat, mode, date, notes);
+        return updateExpense(id, userId, title, amount, cat, mode, date, notes);
     }
 
-    public void deleteExpense(int id, int userId) {
-        expenseRepository.deleteExpense(id, userId);
+    public boolean deleteExpense(int id, int userId) {
+        return expenseRepository.deleteExpense(id, userId);
     }
 
     public double getMonthlyTotal(int userId, String month) {
         return expenseRepository.getMonthlyTotal(userId, month);
     }
 
-    public java.util.Map<String, Double> getCategoryWiseTotal(int userId, String month) {
+    public Map<String, Double> getCategoryWiseTotal(int userId, String month) {
         return expenseRepository.getCategoryWiseTotal(userId, month);
     }
 

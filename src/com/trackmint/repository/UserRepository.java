@@ -1,6 +1,8 @@
 package com.trackmint.repository;
 
 import com.trackmint.db.DBConnection;
+import com.trackmint.exception.DatabaseException;
+import com.trackmint.exception.UserAlreadyExistsException;
 import com.trackmint.model.User;
 import com.trackmint.util.PasswordUtil;
 
@@ -22,16 +24,13 @@ public class UserRepository {
             pstmt.setString(3, PasswordUtil.hashPassword(user.getPassword()));
 
             pstmt.executeUpdate();
-            System.out.println("User registered successfully.");
             return true;
 
         } catch (SQLException e) {
             if (e.getMessage() != null && e.getMessage().contains("UNIQUE")) {
-                System.out.println("Email is already registered. Please login instead.");
-            } else {
-                System.out.println("Error registering user: " + e.getMessage());
+                throw new UserAlreadyExistsException("Email '" + user.getEmail() + "' is already registered.");
             }
-            return false;
+            throw new DatabaseException("Failed to register user", e);
         }
     }
 
@@ -66,7 +65,7 @@ public class UserRepository {
             }
 
         } catch (SQLException e) {
-            System.out.println("Error logging in: " + e.getMessage());
+            throw new DatabaseException("Failed to query user for login", e);
         }
 
         if (authenticatedUser != null && needsUpgrade) {
@@ -89,8 +88,7 @@ public class UserRepository {
             return pstmt.executeUpdate() > 0;
 
         } catch (SQLException e) {
-            System.out.println("Error updating password hash: " + e.getMessage());
-            return false;
+            throw new DatabaseException("Failed to update password hash", e);
         }
     }
 }

@@ -6,8 +6,17 @@ import java.util.Map;
 import java.util.OptionalDouble;
 
 public class AnalyticsService {
-    private final ExpenseService expenseService = new ExpenseService();
-    private final BudgetService budgetService = new BudgetService();
+    private final ExpenseService expenseService;
+    private final BudgetService budgetService;
+
+    public AnalyticsService() {
+        this(new ExpenseService(), new BudgetService());
+    }
+
+    public AnalyticsService(ExpenseService expenseService, BudgetService budgetService) {
+        this.expenseService = expenseService;
+        this.budgetService = budgetService;
+    }
 
     public double getMonthlyTotal(int userId, String month) {
         return expenseService.getMonthlyTotal(userId, month);

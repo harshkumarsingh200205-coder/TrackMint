@@ -1,6 +1,7 @@
 package com.trackmint.repository;
 
 import com.trackmint.db.DBConnection;
+import com.trackmint.exception.DatabaseException;
 import com.trackmint.model.Budget;
 
 import java.sql.Connection;
@@ -10,7 +11,7 @@ import java.sql.SQLException;
 
 public class BudgetRepository {
 
-    public void setBudget(Budget budget) {
+    public boolean setBudget(Budget budget) {
         String upsertSql = """
                 INSERT INTO budgets (user_id, month, total_budget)
                 VALUES (?, ?, ?)
@@ -24,11 +25,10 @@ public class BudgetRepository {
             pstmt.setString(2, budget.getMonth());
             pstmt.setDouble(3, budget.getTotalBudget());
 
-            pstmt.executeUpdate();
-            System.out.println("Budget saved successfully.");
+            return pstmt.executeUpdate() > 0;
 
         } catch (SQLException e) {
-            System.out.println("Error saving budget: " + e.getMessage());
+            throw new DatabaseException("Failed to save budget", e);
         }
     }
 
@@ -53,7 +53,7 @@ public class BudgetRepository {
             }
 
         } catch (SQLException e) {
-            System.out.println("Error fetching budget: " + e.getMessage());
+            throw new DatabaseException("Failed to fetch budget", e);
         }
 
         return null;

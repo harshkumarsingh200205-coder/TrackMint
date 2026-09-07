@@ -1,5 +1,6 @@
 package com.trackmint.ui;
 
+import com.trackmint.exception.DatabaseException;
 import com.trackmint.model.Category;
 import com.trackmint.model.Expense;
 import com.trackmint.model.PaymentMode;
@@ -13,11 +14,16 @@ import java.util.List;
 
 public class ExpenseMenu {
 
-    private final ExpenseService expenseService = new ExpenseService();
+    private final ExpenseService expenseService;
     private final int userId;
 
     public ExpenseMenu(int userId) {
+        this(userId, new ExpenseService());
+    }
+
+    public ExpenseMenu(int userId, ExpenseService expenseService) {
         this.userId = userId;
+        this.expenseService = expenseService;
     }
 
     public void showMenu() {
@@ -67,78 +73,109 @@ public class ExpenseMenu {
         LocalDate expenseDate = promptExpenseDate();
         String notes = InputUtil.getString("Enter notes: ");
 
-        expenseService.addExpense(userId, title, amount, category, paymentMode, expenseDate, notes);
+        try {
+            boolean success = expenseService.addExpense(userId, title, amount, category, paymentMode, expenseDate, notes);
+            if (success) {
+                System.out.println("Expense added successfully.");
+            } else {
+                System.out.println("Failed to add expense.");
+            }
+        } catch (DatabaseException e) {
+            System.out.println("Error adding expense: " + e.getMessage());
+        }
     }
 
     private void viewAllExpenses() {
-        List<Expense> expenses = expenseService.getAllExpensesByUser(userId);
+        try {
+            List<Expense> expenses = expenseService.getAllExpensesByUser(userId);
 
-        if (expenses.isEmpty()) {
-            System.out.println("No expenses found.");
-            return;
-        }
+            if (expenses.isEmpty()) {
+                System.out.println("No expenses found.");
+                return;
+            }
 
-        FormatUtil.printSection("All Expenses");
+            FormatUtil.printSection("All Expenses");
 
-        for (Expense expense : expenses) {
-            System.out.println("ID           : " + expense.getId());
-            System.out.println("Title        : " + expense.getTitle());
-            System.out.println("Amount       : " + FormatUtil.formatCurrency(expense.getAmount()));
-            System.out.println("Category     : " + expense.getCategory());
-            System.out.println("Payment Mode : " + expense.getPaymentMode());
-            System.out.println("Date         : " + expense.getExpenseDate());
-            System.out.println("Notes        : " + expense.getNotes());
-            FormatUtil.printLine();
+            for (Expense expense : expenses) {
+                System.out.println("ID           : " + expense.getId());
+                System.out.println("Title        : " + expense.getTitle());
+                System.out.println("Amount       : " + FormatUtil.formatCurrency(expense.getAmount()));
+                System.out.println("Category     : " + expense.getCategory());
+                System.out.println("Payment Mode : " + expense.getPaymentMode());
+                System.out.println("Date         : " + expense.getExpenseDate());
+                System.out.println("Notes        : " + expense.getNotes());
+                FormatUtil.printLine();
+            }
+        } catch (DatabaseException e) {
+            System.out.println("Error fetching expenses: " + e.getMessage());
         }
     }
 
     private void updateExpense() {
         int id = InputUtil.getInt("Enter expense ID to update: ");
-        Expense existing = expenseService.getExpenseByIdAndUser(id, userId);
-        if (existing == null) {
-            System.out.println("Expense with ID " + id + " not found or does not belong to you.");
-            return;
+        try {
+            Expense existing = expenseService.getExpenseByIdAndUser(id, userId);
+            if (existing == null) {
+                System.out.println("Expense with ID " + id + " not found or does not belong to you.");
+                return;
+            }
+
+            System.out.println("Editing expense #" + id + " [" + existing.getTitle() + " - " + FormatUtil.formatCurrency(existing.getAmount()) + "]");
+
+            String title;
+            do {
+                title = InputUtil.getString("Enter new title: ");
+                if (!ValidationUtil.isValidTitle(title)) {
+                    System.out.println("Title cannot be empty.");
+                }
+            } while (!ValidationUtil.isValidTitle(title));
+
+            double amount;
+            do {
+                amount = InputUtil.getDouble("Enter new amount: ");
+                if (!ValidationUtil.isValidAmount(amount)) {
+                    System.out.println("Amount must be greater than 0.");
+                }
+            } while (!ValidationUtil.isValidAmount(amount));
+
+            Category category = promptCategory();
+            PaymentMode paymentMode = promptPaymentMode();
+            LocalDate expenseDate = promptExpenseDate();
+            String notes = InputUtil.getString("Enter new notes: ");
+
+            boolean success = expenseService.updateExpense(id, userId, title, amount, category, paymentMode, expenseDate, notes);
+            if (success) {
+                System.out.println("Expense updated successfully.");
+            } else {
+                System.out.println("Failed to update expense.");
+            }
+        } catch (DatabaseException e) {
+            System.out.println("Error updating expense: " + e.getMessage());
         }
-
-        System.out.println("Editing expense #" + id + " [" + existing.getTitle() + " - " + FormatUtil.formatCurrency(existing.getAmount()) + "]");
-
-        String title;
-        do {
-            title = InputUtil.getString("Enter new title: ");
-            if (!ValidationUtil.isValidTitle(title)) {
-                System.out.println("Title cannot be empty.");
-            }
-        } while (!ValidationUtil.isValidTitle(title));
-
-        double amount;
-        do {
-            amount = InputUtil.getDouble("Enter new amount: ");
-            if (!ValidationUtil.isValidAmount(amount)) {
-                System.out.println("Amount must be greater than 0.");
-            }
-        } while (!ValidationUtil.isValidAmount(amount));
-
-        Category category = promptCategory();
-        PaymentMode paymentMode = promptPaymentMode();
-        LocalDate expenseDate = promptExpenseDate();
-        String notes = InputUtil.getString("Enter new notes: ");
-
-        expenseService.updateExpense(id, userId, title, amount, category, paymentMode, expenseDate, notes);
     }
 
     private void deleteExpense() {
         int id = InputUtil.getInt("Enter expense ID to delete: ");
-        Expense existing = expenseService.getExpenseByIdAndUser(id, userId);
-        if (existing == null) {
-            System.out.println("Expense with ID " + id + " not found or does not belong to you.");
-            return;
-        }
+        try {
+            Expense existing = expenseService.getExpenseByIdAndUser(id, userId);
+            if (existing == null) {
+                System.out.println("Expense with ID " + id + " not found or does not belong to you.");
+                return;
+            }
 
-        String confirm = InputUtil.getString("Are you sure you want to delete '" + existing.getTitle() + "' (ID: " + id + ")? (y/N): ");
-        if (confirm.equalsIgnoreCase("y") || confirm.equalsIgnoreCase("yes")) {
-            expenseService.deleteExpense(id, userId);
-        } else {
-            System.out.println("Deletion cancelled.");
+            String confirm = InputUtil.getString("Are you sure you want to delete '" + existing.getTitle() + "' (ID: " + id + ")? (y/N): ");
+            if (confirm.equalsIgnoreCase("y") || confirm.equalsIgnoreCase("yes")) {
+                boolean success = expenseService.deleteExpense(id, userId);
+                if (success) {
+                    System.out.println("Expense deleted successfully.");
+                } else {
+                    System.out.println("Failed to delete expense.");
+                }
+            } else {
+                System.out.println("Deletion cancelled.");
+            }
+        } catch (DatabaseException e) {
+            System.out.println("Error deleting expense: " + e.getMessage());
         }
     }
 

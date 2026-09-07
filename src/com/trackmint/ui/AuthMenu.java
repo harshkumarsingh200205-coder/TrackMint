@@ -1,11 +1,21 @@
 package com.trackmint.ui;
 
+import com.trackmint.exception.DatabaseException;
+import com.trackmint.exception.UserAlreadyExistsException;
 import com.trackmint.model.User;
 import com.trackmint.service.AuthService;
 import com.trackmint.util.InputUtil;
 
 public class AuthMenu {
-    private final AuthService authService = new AuthService();
+    private final AuthService authService;
+
+    public AuthMenu() {
+        this(new AuthService());
+    }
+
+    public AuthMenu(AuthService authService) {
+        this.authService = authService;
+    }
 
     public User showAuthMenu() {
         while (true) {
@@ -58,21 +68,35 @@ public class AuthMenu {
             }
         } while (password.length() < 4);
 
-        authService.register(name, email, password);
+        try {
+            boolean success = authService.register(name, email, password);
+            if (success) {
+                System.out.println("User registered successfully. Please login to continue.");
+            }
+        } catch (UserAlreadyExistsException e) {
+            System.out.println(e.getMessage());
+        } catch (DatabaseException e) {
+            System.out.println("Registration failed: " + e.getMessage());
+        }
     }
 
     private User login() {
         String email = InputUtil.getString("Enter your email: ");
         String password = InputUtil.getPassword("Enter your password: ");
 
-        User user = authService.login(email, password);
+        try {
+            User user = authService.login(email, password);
 
-        if (user == null) {
-            System.out.println("Invalid email or password.");
-        } else {
-            System.out.println("Login successful. Welcome, " + user.getName() + "!");
+            if (user == null) {
+                System.out.println("Invalid email or password.");
+            } else {
+                System.out.println("Login successful. Welcome, " + user.getName() + "!");
+            }
+
+            return user;
+        } catch (DatabaseException e) {
+            System.out.println("Login error: " + e.getMessage());
+            return null;
         }
-
-        return user;
     }
 }

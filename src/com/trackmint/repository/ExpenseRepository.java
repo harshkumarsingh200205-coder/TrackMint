@@ -1,6 +1,7 @@
 package com.trackmint.repository;
 
 import com.trackmint.db.DBConnection;
+import com.trackmint.exception.DatabaseException;
 import com.trackmint.model.Category;
 import com.trackmint.model.Expense;
 import com.trackmint.model.PaymentMode;
@@ -8,11 +9,13 @@ import com.trackmint.model.PaymentMode;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ExpenseRepository {
 
-    public void addExpense(Expense expense) {
+    public boolean addExpense(Expense expense) {
         String sql = "INSERT INTO expenses (user_id, title, amount, category, payment_mode, expense_date, notes) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DBConnection.getConnection();
@@ -26,11 +29,10 @@ public class ExpenseRepository {
             pstmt.setString(6, expense.getExpenseDate().toString());
             pstmt.setString(7, expense.getNotes());
 
-            pstmt.executeUpdate();
-            System.out.println("Expense added successfully.");
+            return pstmt.executeUpdate() > 0;
 
         } catch (SQLException e) {
-            System.out.println("Error adding expense: " + e.getMessage());
+            throw new DatabaseException("Failed to add expense", e);
         }
     }
 
@@ -57,7 +59,7 @@ public class ExpenseRepository {
             }
 
         } catch (SQLException e) {
-            System.out.println("Error fetching expenses: " + e.getMessage());
+            throw new DatabaseException("Failed to fetch all expenses", e);
         }
 
         return expenses;
@@ -89,7 +91,7 @@ public class ExpenseRepository {
             }
 
         } catch (SQLException e) {
-            System.out.println("Error fetching user expenses: " + e.getMessage());
+            throw new DatabaseException("Failed to fetch expenses for user", e);
         }
 
         return expenses;
@@ -120,13 +122,13 @@ public class ExpenseRepository {
             }
 
         } catch (SQLException e) {
-            System.out.println("Error fetching expense: " + e.getMessage());
+            throw new DatabaseException("Failed to fetch expense by ID", e);
         }
 
         return null;
     }
 
-    public void updateExpense(Expense expense) {
+    public boolean updateExpense(Expense expense) {
         String sql = "UPDATE expenses SET title = ?, amount = ?, category = ?, payment_mode = ?, expense_date = ?, notes = ? WHERE id = ? AND user_id = ?";
 
         try (Connection conn = DBConnection.getConnection();
@@ -141,20 +143,14 @@ public class ExpenseRepository {
             pstmt.setInt(7, expense.getId());
             pstmt.setInt(8, expense.getUserId());
 
-            int rows = pstmt.executeUpdate();
-
-            if (rows > 0) {
-                System.out.println("Expense updated successfully.");
-            } else {
-                System.out.println("Expense not found or does not belong to this user.");
-            }
+            return pstmt.executeUpdate() > 0;
 
         } catch (SQLException e) {
-            System.out.println("Error updating expense: " + e.getMessage());
+            throw new DatabaseException("Failed to update expense", e);
         }
     }
 
-    public void deleteExpense(int id, int userId) {
+    public boolean deleteExpense(int id, int userId) {
         String sql = "DELETE FROM expenses WHERE id = ? AND user_id = ?";
 
         try (Connection conn = DBConnection.getConnection();
@@ -163,16 +159,10 @@ public class ExpenseRepository {
             pstmt.setInt(1, id);
             pstmt.setInt(2, userId);
 
-            int rows = pstmt.executeUpdate();
-
-            if (rows > 0) {
-                System.out.println("Expense deleted successfully.");
-            } else {
-                System.out.println("Expense not found or does not belong to this user.");
-            }
+            return pstmt.executeUpdate() > 0;
 
         } catch (SQLException e) {
-            System.out.println("Error deleting expense: " + e.getMessage());
+            throw new DatabaseException("Failed to delete expense", e);
         }
     }
 
@@ -192,14 +182,14 @@ public class ExpenseRepository {
             }
 
         } catch (SQLException e) {
-            System.out.println("Error calculating monthly total: " + e.getMessage());
+            throw new DatabaseException("Failed to calculate monthly total", e);
         }
 
         return 0.0;
     }
 
-    public java.util.Map<String, Double> getCategoryWiseTotal(int userId, String month) {
-        java.util.Map<String, Double> categoryTotals = new java.util.HashMap<>();
+    public Map<String, Double> getCategoryWiseTotal(int userId, String month) {
+        Map<String, Double> categoryTotals = new HashMap<>();
         String sql = "SELECT category, SUM(amount) FROM expenses WHERE user_id = ? AND strftime('%Y-%m', expense_date) = ? GROUP BY category";
 
         try (Connection conn = DBConnection.getConnection();
@@ -215,7 +205,7 @@ public class ExpenseRepository {
             }
 
         } catch (SQLException e) {
-            System.out.println("Error calculating category totals: " + e.getMessage());
+            throw new DatabaseException("Failed to calculate category totals", e);
         }
 
         return categoryTotals;
@@ -237,7 +227,7 @@ public class ExpenseRepository {
             }
 
         } catch (SQLException e) {
-            System.out.println("Error finding top category: " + e.getMessage());
+            throw new DatabaseException("Failed to find top category", e);
         }
 
         return "No expenses found";
